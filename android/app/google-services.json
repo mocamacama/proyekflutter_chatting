@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "262843547534",
+    "project_id": "coba-flutter-firebase",
+    "storage_bucket": "coba-flutter-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262843547534:android:3172a1f4f447a94c6daedf",
+        "android_client_info": {
+          "package_name": "com.example.coba_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262843547534-kj11ag843mcenpag7l4pfnv3orksi6rs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9J8CXxwG4NBrOlyviy8iaMADigZSeb6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262843547534-kj11ag843mcenpag7l4pfnv3orksi6rs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "262843547534-shdui908b6sjld42v40qdk0fbr0f0mc3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fluterCobaFirebase"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262843547534:android:4b03eb27929438d76daedf",
+        "android_client_info": {
+          "package_name": "com.example.fluter_coba_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262843547534-kj11ag843mcenpag7l4pfnv3orksi6rs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9J8CXxwG4NBrOlyviy8iaMADigZSeb6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262843547534-kj11ag843mcenpag7l4pfnv3orksi6rs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "262843547534-shdui908b6sjld42v40qdk0fbr0f0mc3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fluterCobaFirebase"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262843547534:android:3b14dec82eb0748c6daedf",
+        "android_client_info": {
+          "package_name": "com.example.proyek_chatting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262843547534-kj11ag843mcenpag7l4pfnv3orksi6rs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9J8CXxwG4NBrOlyviy8iaMADigZSeb6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262843547534-kj11ag843mcenpag7l4pfnv3orksi6rs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "262843547534-shdui908b6sjld42v40qdk0fbr0f0mc3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fluterCobaFirebase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
