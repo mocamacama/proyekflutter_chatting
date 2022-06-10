@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:proyek_chatting/dataclass.dart';
 
 import 'dbserices.dart';
+import 'globals.dart' as globals;
 
 class ChattingClass extends StatefulWidget {
   const ChattingClass({Key? key}) : super(key: key);
@@ -12,6 +15,26 @@ class ChattingClass extends StatefulWidget {
 
 class _ChattingClassState extends State<ChattingClass> {
   int _jumlah = 0;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  TextEditingController txtChat = TextEditingController();
+  String usernamesrc = "romario";
+  String usernamedest = "romariocoba";
+  String channel = "";
+
+  _ChatState() {
+    // String usernamesrc = globals.usernameses;
+    channel = this.usernamesrc + this.usernamedest;
+  }
+
+  void sendmessage() async {
+    var teks = txtChat.text;
+    txtChat.text = "";
+
+    DocumentReference ref = await _firestore
+        .collection(channel)
+        .add({'user1': usernamesrc, 'user2': usernamedest, 'teks': teks, 'tanggal': DateTime.now().toString()});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +114,15 @@ class _ChattingClassState extends State<ChattingClass> {
                 },
               ),
             ),
+            Row(
+              children: [
+                TextFormField(
+                  controller: txtChat,
+                  decoration: InputDecoration(border: OutlineInputBorder()),
+                ),
+                ElevatedButton(onPressed: () {}, child: Icon(Icons.send))
+              ],
+            )
           ],
         ),
       ),

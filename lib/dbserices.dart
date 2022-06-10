@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'dataclass.dart';
+import 'package:intl/intl.dart';
 
 CollectionReference tblCatatan = FirebaseFirestore.instance.collection("tblChats");
 
@@ -23,6 +24,14 @@ class Database {
     //         (event) => print("current data: ${event.data()}"),
     //         onError: (error) => print("Listen failed: $error"),
     //       );
+  }
+
+  static Future<Stream<QuerySnapshot<Object?>>> sendChat({required itemChats item}) async {
+    DocumentReference docRef = tblCatatan.doc();
+
+    await docRef.set(item.toJson()).whenComplete(() => print("chat berhasil di-input")).catchError((e) => print(e));
+
+    return tblCatatan.snapshots();
   }
 
   static Stream<QuerySnapshot> getDataChatting() {
