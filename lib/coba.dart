@@ -1,7 +1,10 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class COBAA extends StatefulWidget {
   final String username1;
@@ -25,6 +28,19 @@ class _COBAAState extends State<COBAA> {
       channel = this.username2 + this.username1;
     }
   }
+
+  // File? imageFile;
+  // ImagePicker _picker = ImagePicker();
+
+  // Future getImage() async{
+  //   await _picker.pickImage(source: ImageSource.gallery).then((XFile){
+
+  //     if(XFile != null ){
+  //       imageFile = File(xFile.path);
+  //     }
+
+  //   })
+  // }
 
   void sendmessage() async {
     var teks = txtChat.text;
@@ -199,6 +215,7 @@ class Record {
         assert(map['user2'] != null),
         assert(map['teks'] != null),
         assert(map['tanggal'] != null),
+        assert(map['gambar'] != null),
         user1 = map['user1'],
         user2 = map['user2'],
         teks = map['teks'],
@@ -208,5 +225,5 @@ class Record {
       : this.fromMap(snapshot.data() as Map<String, dynamic>, reference: snapshot.reference);
 
   @override
-  String toString() => "Record<$user1:$user2:$teks:$tanggal>";
+  String toString() => "Record<$user1:$user2:$teks:$tanggal:>";
 }
