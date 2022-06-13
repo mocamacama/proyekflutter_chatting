@@ -1,12 +1,14 @@
-// ignore_for_file: no_logic_in_create_state, prefer_const_constructors
+// ignore_for_file: no_logic_in_create_state, prefer_const_constructors, use_function_type_syntax_for_parameters
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class COBAA extends StatefulWidget {
   final String username1;
@@ -19,77 +21,127 @@ class COBAA extends StatefulWidget {
 
 class _COBAAState extends State<COBAA> {
   TextEditingController txtChat = TextEditingController();
+  ScrollController _lvcontroller = ScrollController();
   String username1, username2;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String channel = "";
 
+  late FirebaseStorage _firebaseStorage;
   ImagePicker imgpicker = ImagePicker();
-  File? _image;
+  XFile? _image;
 
-  _COBAAState(this.username1, this.username2) {
+  _COBAAState(this.username1, this.username2) {}
+  @override
+  void initState() {
+    _firebaseStorage = FirebaseStorage.instance;
     if (this.username1.compareTo(this.username2) < 0) {
       channel = this.username1 + this.username2;
     } else {
       channel = this.username2 + this.username1;
     }
+    super.initState();
   }
 
-  // File? imageFile;
-  // ImagePicker _picker = ImagePicker();
-
-  // Future getImage() async{
-  //   await _picker.pickImage(source: ImageSource.gallery).then((XFile){
-
-  //     if(XFile != null ){
-  //       imageFile = File(xFile.path);
-  //     }
-
-  //   })
-  // }
   void bukaCamera() async {
+    var file = File("");
+    await Permission.camera.request();
+    var permissionStatus = await Permission.camera.status;
     var image = await imgpicker.pickImage(source: ImageSource.camera);
-    _image = File(image!.path);
-    // setState(() {
-
-    // });
-
-    String namaFileGallery = _image!.path;
-    // String basenamegallery = basename(namaFileGallery);
-    print(namaFileGallery);
-    // print(basenamegallery);
-  }
-
-  Future<String> _sendgambar() async {
-    bukaCamera();
-    // String base64img = "";
-    String namafile = "";
-
-    if (_image != null) {
-      // String filename = Uuid().v1();
-
-      namafile = _image!.path.split("/").last;
-      var imgref = FirebaseStorage.instance.ref().child('images').child(username1).child(namafile);
-      var uploadtask = await imgref.putFile(_image!);
-      var imageurl = uploadtask.ref.getDownloadURL();
+    image == null
+        ? setState(() {
+            SnackBar(content: Text("no img picked"));
+          })
+        : setState(() {
+            _image = image;
+            file = File(_image!.path);
+          });
+    if (image != null) {
+      var filename = basename(file.path);
+      // var snapshot =
+      //     await _firebaseStorage.ref().child('images/$filename').putFile(file);
+      Reference firebaseStorageRef = _firebaseStorage.ref().child('images/$filename');
+      UploadTask uploadTask = firebaseStorageRef.putFile(file);
+      var taskSnap = await (await uploadTask).ref.getDownloadURL();
+      print(taskSnap);
       DocumentReference ref = await _firestore.collection(channel).add({
         'user1': username1,
         'user2': username2,
         'teks': "",
         'tanggal': DateTime.now().toString(),
-        'gambar': imageurl
+        'gambar': taskSnap
       });
-
-      // base64img = base64Encode(File(_image!.path).readAsBytesSync());
-      // namafile = _image!.path.split("/").last;
-      // print("not  null");
-      // print(_image!.path);
-      print(imageurl);
-    } else {
-      print("gambar belum terpilih");
+      _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
     }
-
-    return "suksess";
   }
+
+  uploadImage() async {
+    final _imagePicker = ImagePicker();
+    PickedFile image;
+    //Check Permissions
+    await Permission.photos.request();
+    var permissionStatus = await Permission.photos.status;
+    if (permissionStatus.isGranted) {
+      //Select Image
+      image = (await _imagePicker.getImage(source: ImageSource.gallery))!;
+      var file = File(image.path);
+      var filename = basename(file.path);
+      if (image != null) {
+        // //Upload to Firebase
+        // var snapshot = await _firebaseStorage
+        //     .ref()
+        //     .child('images/$filename')
+        //     .putFile(file); Reference firebaseStorageRef =
+        Reference firebaseStorageRef = _firebaseStorage.ref().child('images/$filename');
+        UploadTask uploadTask = firebaseStorageRef.putFile(file);
+        var taskSnap = await (await uploadTask).ref.getDownloadURL();
+        print(taskSnap);
+        DocumentReference ref = await _firestore.collection(channel).add({
+          'user1': username1,
+          'user2': username2,
+          'teks': "",
+          'tanggal': DateTime.now().toString(),
+          'gambar': taskSnap
+        });
+        _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
+      } else {
+        print('No Image Path Received');
+      }
+    } else {
+      print('Permission not granted. Try Again with permission access');
+    }
+  }
+
+  // Future<String> _sendgambar() async {
+  //   bukaCamera();
+  //   // String base64img = "";
+  //   String namafile = "";
+
+  //   if (_image != null) {
+  //     // String filename = Uuid().v1();
+
+  //     namafile = _image!.path.split("/").last;
+  //     var imgref = FirebaseStorage.instance.ref().child('images').child(username1).child(namafile);
+  //     var uploadtask = await imgref.putFile(_image!);
+  //     var imageurl = uploadtask.ref.getDownloadURL();
+  //     DocumentReference ref = await _firestore.collection(channel).add({
+  //       'user1': username1,
+  //       'user2': username2,
+  //       'teks': "",
+  //       'tanggal': DateTime.now().toString(),
+  //       'gambar': imageurl
+  //     });
+
+  //     // base64img = base64Encode(File(_image!.path).readAsBytesSync());
+  //     // namafile = _image!.path.split("/").last;
+  //     // print("not  null");
+  //     // print(_image!.path);
+  //     print(imageurl);
+  //   } else {
+  //     print("gambar belum terpilih");
+  //   }
+
+  //   return "suksess";
+  // }
 
   void sendmessage() async {
     var teks = txtChat.text;
@@ -97,6 +149,7 @@ class _COBAAState extends State<COBAA> {
 
     DocumentReference ref = await _firestore.collection(channel).add(
         {'user1': username1, 'user2': username2, 'teks': teks, 'tanggal': DateTime.now().toString(), 'gambar': ""});
+    _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
   }
 
   @override
@@ -139,6 +192,18 @@ class _COBAAState extends State<COBAA> {
                         GestureDetector(
                           onTap: () {
                             bukaCamera();
+                          },
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            uploadImage();
                           },
                           child: Icon(
                             Icons.camera,
@@ -198,6 +263,7 @@ class _COBAAState extends State<COBAA> {
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Expanded(
       child: ListView(
+        controller: _lvcontroller,
         padding: const EdgeInsets.only(top: 20.0),
         children: snapshot.map((data) => _buildListItem(context, data)).toList(),
       ),
@@ -227,7 +293,11 @@ class _COBAAState extends State<COBAA> {
                         style: TextStyle(
                           fontSize: 20.0,
                         ))
-                    : Image.network(record.gambar)),
+                    : Image.network(
+                        record.gambar,
+                        width: 80,
+                        height: 100,
+                      )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
             Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
@@ -243,16 +313,21 @@ class _COBAAState extends State<COBAA> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 16.0,
-              ),
-              decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
-              child: Text(record.teks,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  )),
-            ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 16.0,
+                ),
+                decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
+                child: record.gambar == ""
+                    ? Text(record.teks,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ))
+                    : Image.network(
+                        record.gambar,
+                        width: 80,
+                        height: 100,
+                      )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
             Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),

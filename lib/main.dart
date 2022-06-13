@@ -26,6 +26,12 @@ class _MyAppState extends State<MyApp> {
   String username1 = "romario1";
   String username2 = "romario2";
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Chatting")),
