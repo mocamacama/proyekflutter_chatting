@@ -29,18 +29,18 @@ class _COBAAState extends State<COBAA> {
     }
   }
 
-  // File? imageFile;
-  // ImagePicker _picker = ImagePicker();
+  File? imageFile;
+  ImagePicker _picker = ImagePicker();
 
-  // Future getImage() async{
-  //   await _picker.pickImage(source: ImageSource.gallery).then((XFile){
+  Future getImage() async{
+    await _picker.pickImage(source: ImageSource.gallery).then((XFile){
 
-  //     if(XFile != null ){
-  //       imageFile = File(xFile.path);
-  //     }
+      if(XFile != null ){
+        imageFile = File(xFile.path);
+      }
 
-  //   })
-  // }
+    })
+  }
 
   void sendmessage() async {
     var teks = txtChat.text;
