@@ -1,5 +1,6 @@
-// ignore_for_file: no_logic_in_create_state
+// ignore_for_file: no_logic_in_create_state, prefer_const_constructors
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,6 +22,9 @@ class _COBAAState extends State<COBAA> {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String channel = "";
 
+  ImagePicker imgpicker = ImagePicker();
+  XFile? _image;
+
   _COBAAState(this.username1, this.username2) {
     if (this.username1.compareTo(this.username2) < 0) {
       channel = this.username1 + this.username2;
@@ -41,14 +45,45 @@ class _COBAAState extends State<COBAA> {
 
   //   })
   // }
+  void bukaCamera() async {
+    var image = await imgpicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image!;
+    });
+
+    String namaFileGallery = _image!.path;
+    // String basenamegallery = basename(namaFileGallery);
+    print(namaFileGallery);
+    // print(basenamegallery);
+  }
+
+  Future<String> _sendgambar() async {
+    String base64img = "";
+    String namafile = "";
+
+    if (_image != null) {
+      base64img = base64Encode(File(_image!.path).readAsBytesSync());
+      namafile = _image!.path.split("/").last;
+      print("not  null");
+      print(_image!.path);
+      print(namafile);
+    } else {
+      print("gambar belum terpilih");
+    }
+    Map paramData = {
+      'username': "romario",
+      'filename': namafile,
+      'image': base64img,
+    };
+    return "suksess";
+  }
 
   void sendmessage() async {
     var teks = txtChat.text;
     txtChat.text = "";
 
-    DocumentReference ref = await _firestore
-        .collection(channel)
-        .add({'user1': username1, 'user2': username2, 'teks': teks, 'tanggal': DateTime.now().toString()});
+    DocumentReference ref = await _firestore.collection(channel).add(
+        {'user1': username1, 'user2': username2, 'teks': teks, 'tanggal': DateTime.now().toString(), 'gambar': ""});
   }
 
   @override
@@ -60,36 +95,50 @@ class _COBAAState extends State<COBAA> {
           // color: globals.warnaBackgroundLayar,
           child: Column(
             children: <Widget>[
-              Expanded(
+              Flexible(
+                flex: 5,
                 child: _buildBody(context),
               ),
-              Container(
-                color: Colors.white,
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          flex: 7,
-                          child: TextFormField(
-                            controller: txtChat,
-                            keyboardType: TextInputType.text,
-                            style: TextStyle(color: Colors.blue),
-                            decoration: InputDecoration(
-                                hintText: "Chat",
-                                hintStyle: TextStyle(color: Colors.grey),
-                                border: InputBorder.none,
-                                icon: Icon(
-                                  Icons.email,
-                                  color: Colors.grey,
-                                )),
+              Flexible(
+                flex: 1,
+                child: Container(
+                  color: Colors.white,
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          // ignore: unnecessary_new
+                          new Flexible(
+                            flex: 5,
+                            child: TextFormField(
+                              controller: txtChat,
+                              keyboardType: TextInputType.text,
+                              style: TextStyle(color: Colors.blue),
+                              decoration: InputDecoration(
+                                  hintText: "Chat",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  border: InputBorder.none,
+                                  icon: Icon(
+                                    Icons.email,
+                                    color: Colors.grey,
+                                  )),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: GestureDetector(
+                          GestureDetector(
+                            onTap: () {
+                              bukaCamera();
+                            },
+                            child: Icon(
+                              Icons.camera,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          GestureDetector(
                             onTap: () {
                               sendmessage();
                             },
@@ -98,12 +147,13 @@ class _COBAAState extends State<COBAA> {
                               color: Colors.grey,
                             ),
                           ),
+
                           // child: FlatButton(
                           //   child: new Text("Send"),
                           //   onPressed: sendmessage,
                           // )
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -158,16 +208,17 @@ class _COBAAState extends State<COBAA> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 16.0,
-              ),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.0)),
-              child: Text(record.teks,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  )),
-            ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 16.0,
+                ),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.0)),
+                child: record.gambar == ""
+                    ? Text(record.teks,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ))
+                    : Image.network(record.gambar)),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
             Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
