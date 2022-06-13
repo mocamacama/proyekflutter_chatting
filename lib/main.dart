@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         },
         backgroundColor: Colors.blueGrey,
         child: Icon(
-          Icons.add,
+          Icons.chat_bubble,
           color: Colors.white,
           size: 32,
         ),
@@ -68,54 +68,6 @@ class _MyAppState extends State<MyApp> {
                     borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.blue)),
               ),
             ),
-            // Expanded(
-            //   child: StreamBuilder<QuerySnapshot>(
-            //     stream: onSearch(),
-            //     builder: (context, snapshot) {
-            //       if (snapshot.hasError) {
-            //         return Text("ERROR");
-            //       } else {
-            //         if (snapshot.hasData && snapshot.data != null) {
-            //           var snapdata = snapshot.data;
-            //           return ListView.separated(
-            //               itemBuilder: ((context, index) {
-            //                 DocumentSnapshot dsData = snapshot.data!.docs[index];
-            //                 String lvjudul = dsData['judulCat'];
-            //                 String lvisi = dsData['isiCat'];
-            //                 _jumlah = snapdata!.docs.length;
-            //                 return ListTile(
-            //                   onTap: () {
-            //                     // final dtBaru = itemCatatan(itemJudul: lvjudul, itemIsi: lvisi + "+");
-            //                     // Database.ubahData(item: dtBaru);
-            //                     final dtkirim = itemCatatan(itemJudul: lvjudul, itemIsi: lvisi);
-            //                     Navigator.push(
-            //                         context,
-            //                         MaterialPageRoute(
-            //                             builder: (context) => detData(
-            //                                   dataDet: dtkirim,
-            //                                 )));
-            //                   },
-            //                   onLongPress: () {
-            //                     Database.deleteData(judul: lvjudul);
-            //                   },
-            //                   title: Text(lvjudul),
-            //                   subtitle: Text(lvisi),
-            //                 );
-            //               }),
-            //               separatorBuilder: (context, index) => SizedBox(
-            //                     height: 8.0,
-            //                   ),
-            //               itemCount: snapdata!.docs.length);
-            //         }
-            //         return Center(
-            //           child: CircularProgressIndicator(
-            //             valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
-            //           ),
-            //         );
-            //       }
-            //     },
-            //   ),
-            // ),
           ],
         ),
       ),
