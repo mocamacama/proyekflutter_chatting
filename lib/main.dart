@@ -38,8 +38,8 @@ class _MyAppState extends State<MyApp> {
               context,
               MaterialPageRoute(
                   builder: (context) => COBAA(
-                        username1: username2,
-                        username2: username1,
+                        username1: username1,
+                        username2: username2,
                       )));
         },
         backgroundColor: Colors.blueGrey,

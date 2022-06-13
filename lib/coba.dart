@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,7 +24,7 @@ class _COBAAState extends State<COBAA> {
   String channel = "";
 
   ImagePicker imgpicker = ImagePicker();
-  XFile? _image;
+  File? _image;
 
   _COBAAState(this.username1, this.username2) {
     if (this.username1.compareTo(this.username2) < 0) {
@@ -47,9 +48,10 @@ class _COBAAState extends State<COBAA> {
   // }
   void bukaCamera() async {
     var image = await imgpicker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _image = image!;
-    });
+    _image = File(image!.path);
+    // setState(() {
+
+    // });
 
     String namaFileGallery = _image!.path;
     // String basenamegallery = basename(namaFileGallery);
@@ -58,23 +60,34 @@ class _COBAAState extends State<COBAA> {
   }
 
   Future<String> _sendgambar() async {
-    String base64img = "";
+    bukaCamera();
+    // String base64img = "";
     String namafile = "";
 
     if (_image != null) {
-      base64img = base64Encode(File(_image!.path).readAsBytesSync());
+      // String filename = Uuid().v1();
+
       namafile = _image!.path.split("/").last;
-      print("not  null");
-      print(_image!.path);
-      print(namafile);
+      var imgref = FirebaseStorage.instance.ref().child('images').child(username1).child(namafile);
+      var uploadtask = await imgref.putFile(_image!);
+      var imageurl = uploadtask.ref.getDownloadURL();
+      DocumentReference ref = await _firestore.collection(channel).add({
+        'user1': username1,
+        'user2': username2,
+        'teks': "",
+        'tanggal': DateTime.now().toString(),
+        'gambar': imageurl
+      });
+
+      // base64img = base64Encode(File(_image!.path).readAsBytesSync());
+      // namafile = _image!.path.split("/").last;
+      // print("not  null");
+      // print(_image!.path);
+      print(imageurl);
     } else {
       print("gambar belum terpilih");
     }
-    Map paramData = {
-      'username': "romario",
-      'filename': namafile,
-      'image': base64img,
-    };
+
     return "suksess";
   }
 
@@ -95,65 +108,61 @@ class _COBAAState extends State<COBAA> {
           // color: globals.warnaBackgroundLayar,
           child: Column(
             children: <Widget>[
-              Flexible(
-                flex: 5,
+              Expanded(
                 child: _buildBody(context),
               ),
-              Flexible(
-                flex: 1,
-                child: Container(
-                  color: Colors.white,
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: <Widget>[
-                          // ignore: unnecessary_new
-                          new Flexible(
-                            flex: 5,
-                            child: TextFormField(
-                              controller: txtChat,
-                              keyboardType: TextInputType.text,
-                              style: TextStyle(color: Colors.blue),
-                              decoration: InputDecoration(
-                                  hintText: "Chat",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: InputBorder.none,
-                                  icon: Icon(
-                                    Icons.email,
-                                    color: Colors.grey,
-                                  )),
-                            ),
+              Container(
+                color: Colors.white,
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: <Widget>[
+                        // ignore: unnecessary_new
+                        new Flexible(
+                          flex: 5,
+                          child: TextFormField(
+                            controller: txtChat,
+                            keyboardType: TextInputType.text,
+                            style: TextStyle(color: Colors.blue),
+                            decoration: InputDecoration(
+                                hintText: "Chat",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                )),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              bukaCamera();
-                            },
-                            child: Icon(
-                              Icons.camera,
-                              color: Colors.grey,
-                            ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            bukaCamera();
+                          },
+                          child: Icon(
+                            Icons.camera,
+                            color: Colors.grey,
                           ),
-                          SizedBox(
-                            width: 8.0,
+                        ),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            sendmessage();
+                          },
+                          child: Icon(
+                            Icons.send,
+                            color: Colors.grey,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              sendmessage();
-                            },
-                            child: Icon(
-                              Icons.send,
-                              color: Colors.grey,
-                            ),
-                          ),
+                        ),
 
-                          // child: FlatButton(
-                          //   child: new Text("Send"),
-                          //   onPressed: sendmessage,
-                          // )
-                        ],
-                      ),
+                        // child: FlatButton(
+                        //   child: new Text("Send"),
+                        //   onPressed: sendmessage,
+                        // )
+                      ],
                     ),
                   ),
                 ),
@@ -212,7 +221,7 @@ class _COBAAState extends State<COBAA> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -238,7 +247,7 @@ class _COBAAState extends State<COBAA> {
                 vertical: 8.0,
                 horizontal: 16.0,
               ),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.0)),
+              decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
               child: Text(record.teks,
                   style: TextStyle(
                     fontSize: 20.0,
