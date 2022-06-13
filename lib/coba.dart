@@ -29,18 +29,18 @@ class _COBAAState extends State<COBAA> {
     }
   }
 
-  File? imageFile;
-  ImagePicker _picker = ImagePicker();
+  // File? imageFile;
+  // ImagePicker _picker = ImagePicker();
 
-  Future getImage() async{
-    await _picker.pickImage(source: ImageSource.gallery).then((XFile){
+  // Future getImage() async{
+  //   await _picker.pickImage(source: ImageSource.gallery).then((XFile){
 
-      if(XFile != null ){
-        imageFile = File(xFile.path);
-      }
+  //     if(XFile != null ){
+  //       imageFile = File(xFile.path);
+  //     }
 
-    })
-  }
+  //   })
+  // }
 
   void sendmessage() async {
     var teks = txtChat.text;
@@ -208,6 +208,7 @@ class Record {
   final String user2;
   final String teks;
   final String tanggal;
+  final String gambar;
   final DocumentReference reference;
 
   Record.fromMap(Map<String, dynamic> map, {required this.reference})
@@ -219,11 +220,12 @@ class Record {
         user1 = map['user1'],
         user2 = map['user2'],
         teks = map['teks'],
-        tanggal = map['tanggal'];
+        tanggal = map['tanggal'],
+        gambar = map['gambar'];
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data() as Map<String, dynamic>, reference: snapshot.reference);
 
   @override
-  String toString() => "Record<$user1:$user2:$teks:$tanggal:>";
+  String toString() => "Record<$user1:$user2:$teks:$tanggal:$gambar>";
 }
