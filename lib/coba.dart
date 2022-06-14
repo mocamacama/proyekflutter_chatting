@@ -42,7 +42,7 @@ class _COBAAState extends State<COBAA> {
     super.initState();
   }
 
-  void bukaCamera() async {
+  void fromCamera() async {
     var file = File("");
     await Permission.camera.request();
     var permissionStatus = await Permission.camera.status;
@@ -111,38 +111,6 @@ class _COBAAState extends State<COBAA> {
     }
   }
 
-  // Future<String> _sendgambar() async {
-  //   bukaCamera();
-  //   // String base64img = "";
-  //   String namafile = "";
-
-  //   if (_image != null) {
-  //     // String filename = Uuid().v1();
-
-  //     namafile = _image!.path.split("/").last;
-  //     var imgref = FirebaseStorage.instance.ref().child('images').child(username1).child(namafile);
-  //     var uploadtask = await imgref.putFile(_image!);
-  //     var imageurl = uploadtask.ref.getDownloadURL();
-  //     DocumentReference ref = await _firestore.collection(channel).add({
-  //       'user1': username1,
-  //       'user2': username2,
-  //       'teks': "",
-  //       'tanggal': DateTime.now().toString(),
-  //       'gambar': imageurl
-  //     });
-
-  //     // base64img = base64Encode(File(_image!.path).readAsBytesSync());
-  //     // namafile = _image!.path.split("/").last;
-  //     // print("not  null");
-  //     // print(_image!.path);
-  //     print(imageurl);
-  //   } else {
-  //     print("gambar belum terpilih");
-  //   }
-
-  //   return "suksess";
-  // }
-
   void sendmessage() async {
     var teks = txtChat.text;
     txtChat.text = "";
@@ -191,7 +159,7 @@ class _COBAAState extends State<COBAA> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            bukaCamera();
+                            fromCamera();
                           },
                           child: Icon(
                             Icons.camera_alt,
@@ -256,17 +224,16 @@ class _COBAAState extends State<COBAA> {
         // return Expanded(
         //   child: Row(),
         // );
+        // return Text("asd");
       },
     );
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return Expanded(
-      child: ListView(
-        controller: _lvcontroller,
-        padding: const EdgeInsets.only(top: 20.0),
-        children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-      ),
+    return ListView(
+      controller: _lvcontroller,
+      padding: const EdgeInsets.only(top: 20.0),
+      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     );
   }
 
