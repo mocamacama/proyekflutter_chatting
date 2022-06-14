@@ -31,6 +31,7 @@ class _COBAAState extends State<COBAA> {
   XFile? _image;
 
   _COBAAState(this.username1, this.username2) {}
+
   @override
   void initState() {
     _firebaseStorage = FirebaseStorage.instance;
