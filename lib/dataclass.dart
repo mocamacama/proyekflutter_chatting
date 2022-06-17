@@ -28,6 +28,24 @@ class itemChats {
   }
 
   factory itemChats.fromJson(Map<String, dynamic> json) {
-    return itemChats(username: json['username'], text: json['text'], waktu: json['waktu']);
+    return itemChats(
+        username: json['username'], text: json['text'], waktu: json['waktu']);
+  }
+}
+
+// ---------- Sandro -----------//
+// ignore: camel_case_types
+class dataUser {
+  final String idNum;
+  final String username;
+
+  dataUser({required this.idNum, required this.username});
+
+  Map<String, dynamic> toJson() {
+    return {'idNum': idNum, 'nickname': username};
+  }
+
+  factory dataUser.fromJson(Map<String, dynamic> json) {
+    return dataUser(idNum: json['idNum'], username: json['nickname']);
   }
 }

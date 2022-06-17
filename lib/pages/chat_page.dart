@@ -13,8 +13,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  String username1 = "romario1";
-  String username2 = "romario2";
   @override
   void initState() {
     // TODO: implement initState
