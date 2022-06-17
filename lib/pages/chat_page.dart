@@ -33,8 +33,8 @@ class _ChatPageState extends State<ChatPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => COBAA(
-                        username1: username1,
-                        username2: username2,
+                        username1: "0899",
+                        username2: "0812",
                       )));
         },
         backgroundColor: Colors.blueGrey,
