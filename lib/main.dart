@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:proyek_chatting/chatting.dart';
 import 'package:proyek_chatting/coba.dart';
 import 'package:proyek_chatting/screen/home_screen.dart';
+import 'package:proyek_chatting/screen/welcome_screen.dart';
 
 import 'firebase_options.dart';
 
