@@ -1,7 +1,9 @@
 // ignore_for_file: no_logic_in_create_state, prefer_const_constructors, use_function_type_syntax_for_parameters
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/scheduler.dart';
 import 'package:path/path.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,7 +42,33 @@ class _COBAAState extends State<COBAA> {
     } else {
       channel = this.username2 + this.username1;
     }
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
+      if (_lvcontroller.hasClients) {}
+      Timer(Duration(seconds: 1), () {
+        _lvcontroller.animateTo(
+          _lvcontroller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeOut,
+        );
+      });
+    });
+    // WidgetsBinding.instance!.addPostFrameCallback((_) {
+    //   if (_lvcontroller.hasClients) {
+    //     _lvcontroller.animateTo(
+    //       _lvcontroller.position.maxScrollExtent,
+    //       duration: const Duration(milliseconds: 10),
+    //       curve: Curves.easeOut,
+    //     );
+    //   }
+    // });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _lvcontroller.dispose();
+    txtChat.dispose();
+    super.dispose();
   }
 
   void fromCamera() async {
