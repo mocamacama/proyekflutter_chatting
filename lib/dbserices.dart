@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyek_chatting/auth_service.dart';
 import 'dataclass.dart';
 import 'package:intl/intl.dart';
 import 'globals.dart' as glb;
@@ -77,6 +78,27 @@ class Database {
   //       .whenComplete(() => print("Data berhasil dihapus"))
   //       .catchError((e) => print(e));
   // }
+//------------------------ML------------------------//
+  final CollectionReference userList =
+      FirebaseFirestore.instance.collection('User');
+
+  Future<void> createUserData(String email, String name, String uid) async {
+    return await userList.doc(uid).set({'name': name});
+  }
+
+  Future<String> getCurrentUser() async {
+    String nama = "";
+    final AuthenticationService _auth = AuthenticationService();
+    String _uid = _auth.getCurrentUser();
+    var collection = FirebaseFirestore.instance.collection('users');
+    var docSnapshot = await collection.doc(_uid).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      nama = data?['name']; // <-- The value you want to retrieve.
+      // Call setState if needed.
+    }
+    return nama;
+  }
 
 // ---------------------- Sandro ---------------------//
   static Stream<QuerySnapshot> getData(String username) {
@@ -149,5 +171,28 @@ class Database {
       return 0;
     }
   }
+
+  Future<int> registerUser({required dataUser user}) async {
+    if (user.idNum != "") {
+      var tmp = tabelUser.where("idNum", isEqualTo: user.idNum);
+      final temp = await tmp.get();
+      // print(temp.size);
+      if (temp.size > 0) {
+        DocumentReference docRef = tabelTeman.doc(user.idNum);
+        await docRef
+            .set(user.toJson())
+            .whenComplete(() => print("User Berhasil Ditambahkan "))
+            .catchError((e) => print(e));
+        return 1;
+      } else {
+        print("User yang anda add tidak di temukan");
+        return 0;
+      }
+    } else {
+      print("User idNum kosong");
+      return 0;
+    }
+  }
+
 // ---------------------- Sandro ---------------------//
 }
