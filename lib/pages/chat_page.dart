@@ -24,28 +24,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // _jumlah++;
-          // final dtBaru = itemCatatan(itemJudul: _jumlah.toString(), itemIsi: "333");
-          // Database.tambahData(item: dtBaru);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => COBAA(
-                        username1: username1,
-                        username2: username2,
-                      )));
-        },
-        backgroundColor: Colors.blueGrey,
-        child: Icon(
-          Icons.chat_bubble,
-          color: Colors.white,
-          size: 32,
-        ),
-      ),
-    );
+    return Scaffold();
   }
 }
 

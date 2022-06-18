@@ -1,5 +1,1 @@
-class Globals {
-  String username = "";
-}
-
-String usernameses = "";
+String usernameses = '';

@@ -13,7 +13,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MaterialApp(
     title: "Chatting",
-    home: HomeScreen(),
+    home: Welcome_Screen(),
   ));
 }
 
@@ -22,6 +22,6 @@ class Chat_app extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "Chat App", home: HomeScreen());
+    return MaterialApp(title: "Chat App", home: Welcome_Screen());
   }
 }

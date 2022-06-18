@@ -3,9 +3,14 @@ import 'package:proyek_chatting/pages/login_page.dart';
 
 import '../pages/register_page.dart';
 
-class Welcome_Screen extends StatelessWidget {
+class Welcome_Screen extends StatefulWidget {
   const Welcome_Screen({Key? key}) : super(key: key);
 
+  @override
+  State<Welcome_Screen> createState() => _Welcome_ScreenState();
+}
+
+class _Welcome_ScreenState extends State<Welcome_Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

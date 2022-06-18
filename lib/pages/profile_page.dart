@@ -1,12 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyek_chatting/dbserices.dart';
 
-class ProfilePage extends StatelessWidget {
+import '../auth_service.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+
+class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final AuthenticationService _auth = AuthenticationService();
+  final Database test = Database();
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("Profile Page"),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Expanded(
+          child: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              ProfilePicture(name: '', radius: 31, fontsize: 21),
+              SizedBox(height: 50),
+              //welcome
+              // Text(test.getCurrentUser().toString(),
+              //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+              SizedBox(height: 20),
+              TextButton(
+                onPressed: () async {
+                  await _auth.signOut().then((result) {
+                    Navigator.of(context).pop(true);
+                  });
+                },
+                child: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.white,
+                ),
+              )
+            ]),
+          ),
+        ),
+      ),
     );
   }
 }
