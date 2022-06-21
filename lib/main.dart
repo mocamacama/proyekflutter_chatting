@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:proyek_chatting/chatting.dart';
 import 'package:proyek_chatting/coba.dart';
 import 'package:proyek_chatting/screen/home_screen.dart';
+import 'package:proyek_chatting/screen/welcome_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -12,7 +13,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MaterialApp(
     title: "Chatting",
-    home: HomeScreen(),
+    home: Welcome_Screen(),
   ));
 }
 
@@ -21,6 +22,6 @@ class Chat_app extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "Chat App", home: HomeScreen());
+    return MaterialApp(title: "Chat App", home: Welcome_Screen());
   }
 }
