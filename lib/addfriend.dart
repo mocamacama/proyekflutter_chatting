@@ -1,4 +1,5 @@
 // ignore_for_file: file_names, camel_case_types
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'dataclass.dart';
@@ -30,9 +31,12 @@ class _addFriendState extends State<addFriend> {
 
   Future<int> onAddFriend() async {
     setState(() {});
+    var currentUser = FirebaseAuth.instance.currentUser;
+    print(currentUser?.uid);
     final dataUser test =
         dataUser(idNum: _idNumCtl.text, username: _usernameCtl.text);
-    int count = await Database().tambahData(user: test);
+    int count =
+        await Database().tambahData(user: test, userId: currentUser?.uid);
     // print("count : " + count.toString());
     return count;
   }
@@ -77,6 +81,11 @@ class _addFriendState extends State<addFriend> {
                   _contentText = "Data berhasil ditambah";
                 } else if (co == 2) {
                   _contentText = "Semua kolom harus di isi";
+                } else if (co == 3) {
+                  _contentText =
+                      "Masukan user lain / tidak bisa menambah diri sendiri";
+                } else if (co == 4) {
+                  _contentText = "Sudah ada di contact";
                 } else {
                   _contentText = "User tidak ditemukan";
                 }
@@ -109,8 +118,8 @@ class _addFriendState extends State<addFriend> {
   Widget buildIdNumber() => TextField(
       controller: _idNumCtl,
       decoration: InputDecoration(
-        hintText: "0823",
-        labelText: "ID Number",
+        hintText: "example@gmail.com",
+        labelText: "Email",
         border: const OutlineInputBorder(),
         prefixIcon: const Icon(Icons.phone_android),
         errorText: _validate ? 'Value Can\'t Be Empty' : null,

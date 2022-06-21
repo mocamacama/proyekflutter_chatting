@@ -43,11 +43,11 @@ class dataUser {
   dataUser({required this.idNum, required this.username});
 
   Map<String, dynamic> toJson() {
-    return {'idNum': idNum, 'nickname': username};
+    return {'email': idNum, 'name': username};
   }
 
   factory dataUser.fromJson(Map<String, dynamic> json) {
-    return dataUser(idNum: json['idNum'], username: json['nickname']);
+    return dataUser(idNum: json['email'], username: json['name']);
   }
 }
 
