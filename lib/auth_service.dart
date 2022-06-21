@@ -42,9 +42,16 @@ class AuthenticationService {
   }
 
 //current user
-  String getCurrentUser()  {
+  String getCurrentUser() {
     final User user = _auth.currentUser!;
     final uid = user.uid;
     return uid;
+  }
+
+//current email
+  String? getCurrentEmail() {
+    final User user = _auth.currentUser!;
+    final email = user.email;
+    return email;
   }
 }
