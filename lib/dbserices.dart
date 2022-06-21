@@ -17,8 +17,14 @@ CollectionReference tabelTeman = FirebaseFirestore.instance
     .collection("User")
     .doc(currentUser?.uid.toString())
     .collection("teman");
+<<<<<<< HEAD
 
 CollectionReference tabelUser = FirebaseFirestore.instance.collection("User");
+=======
+
+CollectionReference tabelUser = FirebaseFirestore.instance.collection("User");
+
+>>>>>>> 7c38a8c7d445044c18f36e74a296e0f635fb0393
 // ------------------------------------------------------//
 
 class Database {
@@ -90,6 +96,7 @@ class Database {
     return await userList
         .doc(uid)
         .set({'uid': uid, 'name': name, 'email': email});
+<<<<<<< HEAD
   }
 
   Future<String> getUser() async {
@@ -104,6 +111,8 @@ class Database {
       // Call setState if needed.
     }
     return nama;
+=======
+>>>>>>> 7c38a8c7d445044c18f36e74a296e0f635fb0393
   }
 
 // ---------------------- Sandro ---------------------//
