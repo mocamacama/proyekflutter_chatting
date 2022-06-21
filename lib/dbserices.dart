@@ -17,9 +17,14 @@ CollectionReference tabelTeman = FirebaseFirestore.instance
     .collection("User")
     .doc(currentUser?.uid.toString())
     .collection("teman");
+<<<<<<< HEAD
+
+CollectionReference tabelUser = FirebaseFirestore.instance.collection("User");
+=======
 
 CollectionReference tabelUser = FirebaseFirestore.instance.collection("User");
 
+>>>>>>> 7c38a8c7d445044c18f36e74a296e0f635fb0393
 // ------------------------------------------------------//
 
 class Database {
@@ -91,6 +96,23 @@ class Database {
     return await userList
         .doc(uid)
         .set({'uid': uid, 'name': name, 'email': email});
+<<<<<<< HEAD
+  }
+
+  Future<String> getUser() async {
+    String nama = "";
+    final AuthenticationService _auth = AuthenticationService();
+    String _uid = _auth.getCurrentUser();
+    var collection = FirebaseFirestore.instance.collection('User');
+    var docSnapshot = await collection.doc(_uid).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      nama = data?['name']; // <-- The value you want to retrieve.
+      // Call setState if needed.
+    }
+    return nama;
+=======
+>>>>>>> 7c38a8c7d445044c18f36e74a296e0f635fb0393
   }
 
 // ---------------------- Sandro ---------------------//

@@ -30,7 +30,8 @@ class itemChats {
   }
 
   factory itemChats.fromJson(Map<String, dynamic> json) {
-    return itemChats(username: json['username'], text: json['text'], waktu: json['waktu']);
+    return itemChats(
+        username: json['username'], text: json['text'], waktu: json['waktu']);
   }
 }
 

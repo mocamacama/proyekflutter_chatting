@@ -58,8 +58,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontsize: 21),
                       SizedBox(height: 50),
                       //welcome
-                      // Text(test.getCurrentUser().toString(),
-                      //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                      Text(snapshot.data.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                              color: Colors.black)),
                       SizedBox(height: 20),
                       TextButton(
                         onPressed: () async {

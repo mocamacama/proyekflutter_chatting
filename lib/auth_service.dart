@@ -48,12 +48,15 @@ class AuthenticationService {
     return uid;
   }
 
+<<<<<<< HEAD
+=======
   String? getCurrentName() {
     final User user = _auth.currentUser!;
     final name = user.displayName;
     return name;
   }
 
+>>>>>>> 7c38a8c7d445044c18f36e74a296e0f635fb0393
 //current email
   String? getCurrentEmail() {
     final User user = _auth.currentUser!;
