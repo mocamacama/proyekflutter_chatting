@@ -15,13 +15,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-<<<<<<< HEAD
-  // String username1 = "romario1";
-  // String username2 = "romario2";
-=======
   String username1 = "0899";
   String username2 = "0812";
->>>>>>> fbed7552d7c3ff01b07c543c9b1f7f2b33229305
   @override
   void initState() {
     // TODO: implement initState
@@ -31,29 +26,6 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // _jumlah++;
-      //     // final dtBaru = itemCatatan(itemJudul: _jumlah.toString(), itemIsi: "333");
-      //     // Database.tambahData(item: dtBaru);
-      //     Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //             builder: (context) => COBAA(
-      //                   username1: username1,
-      //                   username2: username2,
-      //                 )));
-      //   },
-      //   backgroundColor: Colors.blueGrey,
-      //   child: Icon(
-      //     Icons.chat_bubble,
-      //     color: Colors.white,
-      //     size: 32,
-      //   ),
-      // ),
-    );
-=======
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // _jumlah++;
@@ -79,8 +51,10 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    CollectionReference tabelTeman =
-        FirebaseFirestore.instance.collection("tabelUser").doc(glb.usernameses).collection("teman");
+    CollectionReference tabelTeman = FirebaseFirestore.instance
+        .collection("tabelUser")
+        .doc(glb.usernameses)
+        .collection("teman");
 
     tabelTeman.get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((f) => print('${f.data}}'));
@@ -129,7 +103,9 @@ class _ChatPageState extends State<ChatPage> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -141,7 +117,8 @@ class _ChatPageState extends State<ChatPage> {
                         height: 100,
                       )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
-            Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
+            Text(record.tanggal.substring(0, 16) + "",
+                style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
           ],
         ),
@@ -159,7 +136,9 @@ class _ChatPageState extends State<ChatPage> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -171,13 +150,13 @@ class _ChatPageState extends State<ChatPage> {
                         height: 100,
                       )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
-            Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
+            Text(record.tanggal.substring(0, 16) + "",
+                style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
           ],
         ),
       );
     }
->>>>>>> fbed7552d7c3ff01b07c543c9b1f7f2b33229305
   }
 }
 

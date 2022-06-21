@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyek_chatting/globals.dart';
 import '../addfriend.dart';
@@ -30,7 +31,9 @@ class _ContactPageState extends State<ContactPage> {
 
   Stream<QuerySnapshot<Object?>> onSearch() {
     setState(() {});
-    return Database.getData(_searchFriend.text);
+    var currentUser = FirebaseAuth.instance.currentUser;
+    print(currentUser?.uid);
+    return Database.getData(_searchFriend.text, currentUser?.uid);
   }
 
   @override
@@ -80,8 +83,8 @@ class _ContactPageState extends State<ContactPage> {
                         itemBuilder: (context, index) {
                           DocumentSnapshot dsDataFriends =
                               snapshot.data!.docs[index];
-                          String lvUsername = dsDataFriends['nickname'];
-                          String lvIdNum = dsDataFriends['idNum'];
+                          String lvUsername = dsDataFriends['name'];
+                          String lvIdNum = dsDataFriends['email'];
                           return ListTile(
                             shape: const RoundedRectangleBorder(
                                 borderRadius:

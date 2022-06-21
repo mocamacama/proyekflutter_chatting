@@ -184,7 +184,7 @@ class _updateFriend extends State<updateFriend> {
       initialValue: dataIdNum_,
       decoration: InputDecoration(
         hintText: dataIdNum_,
-        labelText: "ID Number",
+        labelText: "Email",
         border: const OutlineInputBorder(),
         prefixIcon: const Icon(Icons.phone_android),
       ));
