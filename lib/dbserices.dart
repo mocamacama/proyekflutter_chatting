@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyek_chatting/auth_service.dart';
 import 'dataclass.dart';
 import 'package:intl/intl.dart';
 import 'globals.dart' as glb;
 
-CollectionReference tblCatatan =
-    FirebaseFirestore.instance.collection("tblChats");
+final AuthenticationService _auth = AuthenticationService();
+String _uid = _auth.getCurrentUser();
+
+CollectionReference tblCatatan = FirebaseFirestore.instance.collection("tblChats");
 
 // ---------------------- Sandro ---------------------//
-CollectionReference tabelTeman = FirebaseFirestore.instance
-    .collection("tabelUser")
-    .doc(glb.usernameses)
-    .collection("teman");
+CollectionReference tabelTeman = FirebaseFirestore.instance.collection("tabelUser").doc(_uid).collection("teman");
 
-CollectionReference tabelUser =
-    FirebaseFirestore.instance.collection("tabelUser");
+CollectionReference tabelUser = FirebaseFirestore.instance.collection("tabelUser");
 // ------------------------------------------------------//
 
 class Database {
@@ -77,15 +76,33 @@ class Database {
   //       .whenComplete(() => print("Data berhasil dihapus"))
   //       .catchError((e) => print(e));
   // }
+//------------------------ML------------------------//
+  final CollectionReference userList = FirebaseFirestore.instance.collection('User');
+
+  Future<void> createUserData(String email, String name, String uid) async {
+    return await userList.doc(uid).set({'uid': uid, 'name': name, 'email': email});
+  }
+
+  Future<String> getCurrentUser() async {
+    String nama = "";
+    final AuthenticationService _auth = AuthenticationService();
+    String _uid = _auth.getCurrentUser();
+    var collection = FirebaseFirestore.instance.collection('users');
+    var docSnapshot = await collection.doc(_uid).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      nama = data?['name']; // <-- The value you want to retrieve.
+      // Call setState if needed.
+    }
+    return nama;
+  }
 
 // ---------------------- Sandro ---------------------//
   static Stream<QuerySnapshot> getData(String username) {
     if (username == "") {
       return tabelTeman.snapshots();
     } else {
-      return tabelTeman
-          .orderBy("username")
-          .startAt([username]).endAt([username + '\uf8ff']).snapshots();
+      return tabelTeman.orderBy("username").startAt([username]).endAt([username + '\uf8ff']).snapshots();
       // .where("username", isGreaterThan: username).where("username", isLessThanOrEqualTo: username + '\uf8ff');
     }
   }
@@ -97,10 +114,7 @@ class Database {
       if (temp.size > 0) {
         int tmp = 0;
         DocumentReference docRef = tabelTeman.doc(user.idNum);
-        await docRef
-            .update(user.toJson())
-            .whenComplete(() => tmp = 1)
-            .catchError((e) => print(e));
+        await docRef.update(user.toJson()).whenComplete(() => tmp = 1).catchError((e) => print(e));
         return tmp;
       }
       return 0;
@@ -116,10 +130,7 @@ class Database {
       if (temp.size > 0) {
         int tmp = 0;
         DocumentReference docRef = tabelTeman.doc(user.idNum);
-        await docRef
-            .delete()
-            .whenComplete(() => tmp = 1)
-            .catchError((e) => print(e));
+        await docRef.delete().whenComplete(() => tmp = 1).catchError((e) => print(e));
         return tmp;
       }
       return 0;
@@ -149,5 +160,28 @@ class Database {
       return 0;
     }
   }
+
+  Future<int> registerUser({required dataUser user}) async {
+    if (user.idNum != "") {
+      var tmp = tabelUser.where("idNum", isEqualTo: user.idNum);
+      final temp = await tmp.get();
+      // print(temp.size);
+      if (temp.size > 0) {
+        DocumentReference docRef = tabelTeman.doc(user.idNum);
+        await docRef
+            .set(user.toJson())
+            .whenComplete(() => print("User Berhasil Ditambahkan "))
+            .catchError((e) => print(e));
+        return 1;
+      } else {
+        print("User yang anda add tidak di temukan");
+        return 0;
+      }
+    } else {
+      print("User idNum kosong");
+      return 0;
+    }
+  }
+
 // ---------------------- Sandro ---------------------//
 }

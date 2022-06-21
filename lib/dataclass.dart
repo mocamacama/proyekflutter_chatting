@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 class itemCatatan {
   final String itemJudul;
   final String itemIsi;
@@ -28,8 +30,7 @@ class itemChats {
   }
 
   factory itemChats.fromJson(Map<String, dynamic> json) {
-    return itemChats(
-        username: json['username'], text: json['text'], waktu: json['waktu']);
+    return itemChats(username: json['username'], text: json['text'], waktu: json['waktu']);
   }
 }
 
@@ -48,4 +49,11 @@ class dataUser {
   factory dataUser.fromJson(Map<String, dynamic> json) {
     return dataUser(idNum: json['idNum'], username: json['nickname']);
   }
+}
+
+class Users {
+  final String username;
+  final String password;
+  final String email;
+  Users(this.username, this.password, this.email);
 }
