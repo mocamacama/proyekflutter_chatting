@@ -13,8 +13,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final AuthenticationService _auth = AuthenticationService();
   final Database test = Database();
+  final AuthenticationService _auth = AuthenticationService();
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SafeArea(
         child: Expanded(
           child: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               ProfilePicture(name: '', radius: 31, fontsize: 21),
               SizedBox(height: 50),
               //welcome

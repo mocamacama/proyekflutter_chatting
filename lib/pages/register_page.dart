@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:proyek_chatting/dbserices.dart';
 import 'package:proyek_chatting/screen/welcome_screen.dart';
@@ -134,7 +137,7 @@ class _Register_PageState extends State<Register_Page> {
                           }
                         },
                         child: Text(
-                          "Sign In",
+                          "Sign Up",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -154,11 +157,14 @@ class _Register_PageState extends State<Register_Page> {
   }
 
   void createUser() async {
-    dynamic result = await _auth.createNewUser(
-        _emailContoller.text, _nameContoller.text, _passwordController.text);
+    dynamic result = await _auth.createNewUser(_emailContoller.text, _nameContoller.text, _passwordController.text);
+    // print("ini email" + result.email);
     if (result == null) {
       print('Email is not valid');
     } else {
+      // CollectionReference users = FirebaseFirestore.instance.collection("User");
+      // // String uid = _auth.getCurrentUser();
+      // users.add({"name": _nameContoller.text, "password": _passwordController.text, "email": _emailContoller.text});
       print(result.toString());
       _emailContoller.clear();
       _passwordController.clear();

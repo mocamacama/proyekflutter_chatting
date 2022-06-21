@@ -42,7 +42,7 @@ class _COBAAState extends State<COBAA> {
     } else {
       channel = this.username2 + this.username1;
     }
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       if (_lvcontroller.hasClients) {}
       Timer(Duration(seconds: 1), () {
         _lvcontroller.animateTo(

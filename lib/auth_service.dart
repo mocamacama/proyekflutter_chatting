@@ -8,8 +8,7 @@ class AuthenticationService {
 
   Future createNewUser(String email, String name, String password) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       await Database().createUserData(email, name, user!.uid);
       return user;
@@ -22,8 +21,7 @@ class AuthenticationService {
 
   Future loginUser(String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       return result.user;
     } catch (e) {
       print(e.toString());
@@ -42,7 +40,7 @@ class AuthenticationService {
   }
 
 //current user
-  String getCurrentUser()  {
+  String getCurrentUser() {
     final User user = _auth.currentUser!;
     final uid = user.uid;
     return uid;

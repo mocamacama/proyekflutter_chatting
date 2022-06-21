@@ -4,17 +4,15 @@ import 'dataclass.dart';
 import 'package:intl/intl.dart';
 import 'globals.dart' as glb;
 
-CollectionReference tblCatatan =
-    FirebaseFirestore.instance.collection("tblChats");
+final AuthenticationService _auth = AuthenticationService();
+String _uid = _auth.getCurrentUser();
+
+CollectionReference tblCatatan = FirebaseFirestore.instance.collection("tblChats");
 
 // ---------------------- Sandro ---------------------//
-CollectionReference tabelTeman = FirebaseFirestore.instance
-    .collection("tabelUser")
-    .doc(glb.usernameses)
-    .collection("teman");
+CollectionReference tabelTeman = FirebaseFirestore.instance.collection("tabelUser").doc(_uid).collection("teman");
 
-CollectionReference tabelUser =
-    FirebaseFirestore.instance.collection("tabelUser");
+CollectionReference tabelUser = FirebaseFirestore.instance.collection("tabelUser");
 // ------------------------------------------------------//
 
 class Database {
@@ -79,11 +77,10 @@ class Database {
   //       .catchError((e) => print(e));
   // }
 //------------------------ML------------------------//
-  final CollectionReference userList =
-      FirebaseFirestore.instance.collection('User');
+  final CollectionReference userList = FirebaseFirestore.instance.collection('User');
 
   Future<void> createUserData(String email, String name, String uid) async {
-    return await userList.doc(uid).set({'name': name});
+    return await userList.doc(uid).set({'uid': uid, 'name': name, 'email': email});
   }
 
   Future<String> getCurrentUser() async {
@@ -105,9 +102,7 @@ class Database {
     if (username == "") {
       return tabelTeman.snapshots();
     } else {
-      return tabelTeman
-          .orderBy("username")
-          .startAt([username]).endAt([username + '\uf8ff']).snapshots();
+      return tabelTeman.orderBy("username").startAt([username]).endAt([username + '\uf8ff']).snapshots();
       // .where("username", isGreaterThan: username).where("username", isLessThanOrEqualTo: username + '\uf8ff');
     }
   }
@@ -119,10 +114,7 @@ class Database {
       if (temp.size > 0) {
         int tmp = 0;
         DocumentReference docRef = tabelTeman.doc(user.idNum);
-        await docRef
-            .update(user.toJson())
-            .whenComplete(() => tmp = 1)
-            .catchError((e) => print(e));
+        await docRef.update(user.toJson()).whenComplete(() => tmp = 1).catchError((e) => print(e));
         return tmp;
       }
       return 0;
@@ -138,10 +130,7 @@ class Database {
       if (temp.size > 0) {
         int tmp = 0;
         DocumentReference docRef = tabelTeman.doc(user.idNum);
-        await docRef
-            .delete()
-            .whenComplete(() => tmp = 1)
-            .catchError((e) => print(e));
+        await docRef.delete().whenComplete(() => tmp = 1).catchError((e) => print(e));
         return tmp;
       }
       return 0;
