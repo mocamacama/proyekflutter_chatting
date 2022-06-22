@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:path/path.dart';
 
@@ -100,6 +101,14 @@ class _COBAAState extends State<COBAA> {
         'gambar': taskSnap
       });
       _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
+      var currentUser = FirebaseAuth.instance.currentUser;
+      print(currentUser?.uid);
+      var lasmsgref = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(currentUser?.uid)
+          .collection('teman')
+          .doc(username2)
+          .update({'lastmsg': "[Picture]"});
     }
   }
 
@@ -132,6 +141,15 @@ class _COBAAState extends State<COBAA> {
           'gambar': taskSnap
         });
         _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
+
+        var currentUser = FirebaseAuth.instance.currentUser;
+        print(currentUser?.uid);
+        var lasmsgref = await FirebaseFirestore.instance
+            .collection('User')
+            .doc(currentUser?.uid)
+            .collection('teman')
+            .doc(username2)
+            .update({'lastmsg': "[Picture]"});
       } else {
         print('No Image Path Received');
       }
@@ -147,6 +165,14 @@ class _COBAAState extends State<COBAA> {
     DocumentReference ref = await _firestore.collection(channel).add(
         {'user1': username1, 'user2': username2, 'teks': teks, 'tanggal': DateTime.now().toString(), 'gambar': ""});
     _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
+    var currentUser = FirebaseAuth.instance.currentUser;
+    print(currentUser?.uid);
+    var lasmsgref = await FirebaseFirestore.instance
+        .collection('User')
+        .doc(currentUser?.uid)
+        .collection('teman')
+        .doc(username2)
+        .update({'lastmsg': teks});
   }
 
   @override

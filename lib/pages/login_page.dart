@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyek_chatting/auth_service.dart';
 import 'package:proyek_chatting/screen/home_screen.dart';
+import 'package:proyek_chatting/globals.dart' as glb;
 
 class Login_Page extends StatefulWidget {
   const Login_Page({Key? key}) : super(key: key);
@@ -129,15 +130,14 @@ class _Login_PageState extends State<Login_Page> {
   }
 
   void signInUser() async {
-    dynamic authResult =
-        await _auth.loginUser(_emailContoller.text, _passwordController.text);
+    dynamic authResult = await _auth.loginUser(_emailContoller.text, _passwordController.text);
     if (authResult == null) {
       print('Sign in error. could not be able to login');
     } else {
+      glb.usernameses = _emailContoller.text;
       _emailContoller.clear();
       _passwordController.clear();
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
   }
 }

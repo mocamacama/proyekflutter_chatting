@@ -8,95 +8,32 @@ import 'globals.dart' as glb;
 final AuthenticationService _auth = AuthenticationService();
 String _uid = _auth.getCurrentUser();
 
-CollectionReference tblCatatan =
-    FirebaseFirestore.instance.collection("tblChats");
+CollectionReference tblCatatan = FirebaseFirestore.instance.collection("tblChats");
 
 // ---------------------- Sandro ---------------------//
 var currentUser = FirebaseAuth.instance.currentUser;
-CollectionReference tabelTeman = FirebaseFirestore.instance
-    .collection("User")
-    .doc(currentUser?.uid.toString())
-    .collection("teman");
-<<<<<<< HEAD
+CollectionReference tabelTeman =
+    FirebaseFirestore.instance.collection("User").doc(currentUser?.uid.toString()).collection("teman");
 
 CollectionReference tabelUser = FirebaseFirestore.instance.collection("User");
-=======
-
-CollectionReference tabelUser = FirebaseFirestore.instance.collection("User");
-
->>>>>>> 7c38a8c7d445044c18f36e74a296e0f635fb0393
 // ------------------------------------------------------//
 
 class Database {
-  // static Stream<QuerySnapshot> getData(String judul) {
-  //   if (judul == "") {
-  //     return tblCatatan.snapshots();
-  //   } else {
-  //     return tblCatatan
-  //         // .where("judulCat", isEqualTo: judul)
+//------------------------R------------------------//
 
-  //         .orderBy('judulCat')
-  //         .startAt([judul]).endAt([judul + '\uf8ff']).snapshots();
-  //   }
+  Future<String> getLastChat(String channel) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('events').orderBy('tanggal').get();
 
-  //   // CollectionReference tblCatatan = FirebaseFirestore.instance.collection("tabelcatatan");
-  //   // tblCatatan.snapshots().listen(
-  //   //         (event) => print("current data: ${event.data()}"),
-  //   //         onError: (error) => print("Listen failed: $error"),
-  //   //       );
-  // }
+    final allData = snapshot.docs.map((doc) => doc.data()).toList();
+    print(allData);
+    return "ok";
+  }
 
-  // static Future<Stream<QuerySnapshot<Object?>>> sendChat(
-  //     {required itemChats item}) async {
-  //   DocumentReference docRef = tblCatatan.doc();
-
-  //   await docRef
-  //       .set(item.toJson())
-  //       .whenComplete(() => print("chat berhasil di-input"))
-  //       .catchError((e) => print(e));
-
-  //   return tblCatatan.snapshots();
-  // }
-
-  // static Stream<QuerySnapshot> getDataChatting() {
-  //   return tblCatatan.snapshots();
-  // }
-
-  // static Future<void> tambahData({required itemCatatan item}) async {
-  //   DocumentReference docRef = tblCatatan.doc(item.itemJudul);
-
-  //   await docRef
-  //       .set(item.toJson())
-  //       .whenComplete(() => print("Data berhasil di-input"))
-  //       .catchError((e) => print(e));
-  // }
-
-  // static Future<void> ubahData({required itemCatatan item}) async {
-  //   DocumentReference docRef = tblCatatan.doc(item.itemJudul);
-
-  //   await docRef
-  //       .update(item.toJson())
-  //       .whenComplete(() => print("Data berhasil diubah"))
-  //       .catchError((e) => print(e));
-  // }
-
-  // static Future<void> deleteData({required String judul}) async {
-  //   DocumentReference docRef = tblCatatan.doc(judul);
-
-  //   await docRef
-  //       .delete()
-  //       .whenComplete(() => print("Data berhasil dihapus"))
-  //       .catchError((e) => print(e));
-  // }
 //------------------------ML------------------------//
-  final CollectionReference userList =
-      FirebaseFirestore.instance.collection('User');
+  final CollectionReference userList = FirebaseFirestore.instance.collection('User');
 
   Future<void> createUserData(String email, String name, String uid) async {
-    return await userList
-        .doc(uid)
-        .set({'uid': uid, 'name': name, 'email': email});
-<<<<<<< HEAD
+    return await userList.doc(uid).set({'uid': uid, 'name': name, 'email': email});
   }
 
   Future<String> getUser() async {
@@ -111,22 +48,15 @@ class Database {
       // Call setState if needed.
     }
     return nama;
-=======
->>>>>>> 7c38a8c7d445044c18f36e74a296e0f635fb0393
   }
 
 // ---------------------- Sandro ---------------------//
   static Stream<QuerySnapshot> getData(String username, String? userId) {
-    tabelTeman = FirebaseFirestore.instance
-        .collection("User")
-        .doc(userId)
-        .collection("teman");
+    tabelTeman = FirebaseFirestore.instance.collection("User").doc(userId).collection("teman");
     if (username == "") {
       return tabelTeman.snapshots();
     } else {
-      return tabelTeman
-          .orderBy("name")
-          .startAt([username]).endAt([username + '\uf8ff']).snapshots();
+      return tabelTeman.orderBy("name").startAt([username]).endAt([username + '\uf8ff']).snapshots();
       // .where("username", isGreaterThan: username).where("username", isLessThanOrEqualTo: username + '\uf8ff');
     }
   }
@@ -138,10 +68,7 @@ class Database {
       if (temp.size > 0) {
         int tmp = 0;
         DocumentReference docRef = tabelTeman.doc(user.idNum);
-        await docRef
-            .update(user.toJson())
-            .whenComplete(() => tmp = 1)
-            .catchError((e) => print(e));
+        await docRef.update(user.toJson()).whenComplete(() => tmp = 1).catchError((e) => print(e));
         return tmp;
       }
       return 0;
@@ -157,10 +84,7 @@ class Database {
       if (temp.size > 0) {
         int tmp = 0;
         DocumentReference docRef = tabelTeman.doc(user.idNum);
-        await docRef
-            .delete()
-            .whenComplete(() => tmp = 1)
-            .catchError((e) => print(e));
+        await docRef.delete().whenComplete(() => tmp = 1).catchError((e) => print(e));
         return tmp;
       }
       return 0;
@@ -169,8 +93,7 @@ class Database {
     }
   }
 
-  Future<int> tambahData(
-      {required dataUser user, required String? userId}) async {
+  Future<int> tambahData({required dataUser user, required String? userId}) async {
     if (user.idNum != "") {
       var tmp = tabelUser.where("email", isEqualTo: user.idNum);
       final temp = await tmp.get();

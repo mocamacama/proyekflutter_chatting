@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyek_chatting/dataclass.dart';
 import 'package:proyek_chatting/globals.dart';
 import '../addfriend.dart';
 import '../coba.dart';
 import '../dbserices.dart';
 import '../update_delete_friendlist.dart';
+import 'package:proyek_chatting/globals.dart' as glb;
 
 class ContactPage extends StatefulWidget {
   const ContactPage({Key? key}) : super(key: key);
@@ -16,7 +18,7 @@ class ContactPage extends StatefulWidget {
 
 class _ContactPageState extends State<ContactPage> {
   final _searchFriend = TextEditingController();
-
+  String channel = "";
   @override
   void dispose() {
     _searchFriend.dispose();
@@ -64,8 +66,7 @@ class _ContactPageState extends State<ContactPage> {
                 hintText: "Case Sensitive",
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.blue)),
+                    borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.blue)),
               ),
             ),
             const SizedBox(
@@ -81,14 +82,12 @@ class _ContactPageState extends State<ContactPage> {
                   } else if (snapshot.hasData || snapshot.data != null) {
                     return ListView.separated(
                         itemBuilder: (context, index) {
-                          DocumentSnapshot dsDataFriends =
-                              snapshot.data!.docs[index];
+                          DocumentSnapshot dsDataFriends = snapshot.data!.docs[index];
                           String lvUsername = dsDataFriends['name'];
                           String lvIdNum = dsDataFriends['email'];
+                          String lvLastmsg = dsDataFriends['lastmsg'];
                           return ListTile(
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                             leading: const Icon(
                               Icons.person_outlined,
                               size: 34,
@@ -103,7 +102,7 @@ class _ContactPageState extends State<ContactPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => COBAA(
-                                            username1: "0812",
+                                            username1: glb.usernameses,
                                             username2: lvIdNum,
                                           )),
                                 );
@@ -131,13 +130,12 @@ class _ContactPageState extends State<ContactPage> {
                                   color: Color.fromARGB(255, 2, 65, 110)),
                             ),
                             subtitle: Text(
-                              lvIdNum,
+                              lvLastmsg,
                               style: const TextStyle(fontSize: 14),
                             ),
                           );
                         },
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 8.0),
+                        separatorBuilder: (context, index) => const SizedBox(height: 8.0),
                         itemCount: snapshot.data!.docs.length);
                   }
                   return const Center(
