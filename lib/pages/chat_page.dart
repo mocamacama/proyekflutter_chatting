@@ -101,22 +101,6 @@ class _ChatPageState extends State<ChatPage> {
                               Icons.person_outlined,
                               size: 34,
                             ),
-                            trailing: GestureDetector(
-                              child: const Icon(
-                                Icons.chat,
-                                size: 34,
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => COBAA(
-                                            username1: glb.usernameses,
-                                            username2: lvIdNum,
-                                          )),
-                                );
-                              },
-                            ),
                             onTap: () {
                               Navigator.push(
                                 context,
