@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:proyek_chatting/chatting.dart';
 import 'package:proyek_chatting/coba.dart';
 import 'package:proyek_chatting/dbserices.dart';
@@ -91,15 +92,19 @@ class _ChatPageState extends State<ChatPage> {
                   } else if (snapshot.hasData || snapshot.data != null) {
                     return ListView.separated(
                         itemBuilder: (context, index) {
-                          DocumentSnapshot dsDataFriends = snapshot.data!.docs[index];
+                          DocumentSnapshot dsDataFriends =
+                              snapshot.data!.docs[index];
                           String lvUsername = dsDataFriends['name'];
                           String lvIdNum = dsDataFriends['email'];
                           String lvLastmsg = dsDataFriends['lastmsg'];
                           return ListTile(
-                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                            leading: const Icon(
-                              Icons.person_outlined,
-                              size: 34,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            leading: ProfilePicture(
+                              name: lvUsername,
+                              radius: 24,
+                              fontsize: 18,
                             ),
                             onTap: () {
                               Navigator.push(
@@ -111,7 +116,7 @@ class _ChatPageState extends State<ChatPage> {
                                         )),
                               );
                             },
-                            tileColor: const Color.fromARGB(255, 142, 221, 250),
+                            tileColor: Color.fromARGB(255, 110, 216, 174),
                             dense: false,
                             title: Text(
                               lvUsername,
@@ -127,7 +132,8 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                           );
                         },
-                        separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 8.0),
                         itemCount: snapshot.data!.docs.length);
                   }
                   return const Center(
@@ -148,8 +154,10 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 Widget _buildBody(BuildContext context) {
-  CollectionReference tabelTeman =
-      FirebaseFirestore.instance.collection("tabelUser").doc(glb.usernameses).collection("teman");
+  CollectionReference tabelTeman = FirebaseFirestore.instance
+      .collection("tabelUser")
+      .doc(glb.usernameses)
+      .collection("teman");
 
   tabelTeman.get().then((QuerySnapshot snapshot) {
     snapshot.docs.forEach((f) => print('${f.data}}'));
@@ -198,7 +206,9 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                 vertical: 8.0,
                 horizontal: 16.0,
               ),
-              decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(10.0)),
               child: record.gambar == ""
                   ? Text(record.teks,
                       style: TextStyle(
@@ -210,7 +220,8 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                       height: 100,
                     )),
           Padding(padding: const EdgeInsets.only(top: 5.0)),
-          Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
+          Text(record.tanggal.substring(0, 16) + "",
+              style: TextStyle(fontSize: 10.0, color: Colors.black)),
           Padding(padding: const EdgeInsets.only(top: 10.0)),
         ],
       ),
@@ -228,7 +239,9 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                 vertical: 8.0,
                 horizontal: 16.0,
               ),
-              decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(10.0)),
               child: record.gambar == ""
                   ? Text(record.teks,
                       style: TextStyle(
@@ -240,7 +253,8 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                       height: 100,
                     )),
           Padding(padding: const EdgeInsets.only(top: 5.0)),
-          Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
+          Text(record.tanggal.substring(0, 16) + "",
+              style: TextStyle(fontSize: 10.0, color: Colors.black)),
           Padding(padding: const EdgeInsets.only(top: 10.0)),
         ],
       ),

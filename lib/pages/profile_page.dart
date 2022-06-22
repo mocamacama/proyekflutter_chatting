@@ -47,39 +47,39 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SafeArea(
         child: Center(
           child: FutureBuilder<String>(
-              future: _value,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ProfilePicture(
-                          name: snapshot.data.toString(),
-                          radius: 50,
-                          fontsize: 21),
-                      SizedBox(height: 50),
-                      //welcome
-                      Text(snapshot.data.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                              color: Colors.black)),
-                      SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () async {
-                          var currentUser = FirebaseAuth.instance.currentUser;
-                          await _auth.signOut().then((result) {
-                            print(currentUser?.uid);
-                            Navigator.of(context).pop(true);
-                          });
-                        },
-                        child: Icon(
-                          Icons.exit_to_app,
-                          color: Colors.black,
-                          size: 50,
-                        ),
-                      )
-                    ]);
-              }),
+            future: _value,
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              return Column(
+                children: [
+                  SizedBox(height: 150),
+                  ProfilePicture(
+                      name: snapshot.data.toString(), radius: 50, fontsize: 21),
+                  SizedBox(height: 50),
+                  //welcome
+                  Text(snapshot.data.toString(),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.black)),
+                  SizedBox(height: 50),
+                  TextButton(
+                    onPressed: () async {
+                      var currentUser = FirebaseAuth.instance.currentUser;
+                      await _auth.signOut().then((result) {
+                        print(currentUser?.uid);
+                        Navigator.of(context).pop(true);
+                      });
+                    },
+                    child: Icon(
+                      Icons.exit_to_app,
+                      color: Colors.black,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

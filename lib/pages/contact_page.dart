@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:proyek_chatting/dataclass.dart';
 import 'package:proyek_chatting/globals.dart';
 import '../addfriend.dart';
@@ -66,7 +67,8 @@ class _ContactPageState extends State<ContactPage> {
                 hintText: "Case Sensitive",
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.blue)),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.blue)),
               ),
             ),
             const SizedBox(
@@ -82,14 +84,18 @@ class _ContactPageState extends State<ContactPage> {
                   } else if (snapshot.hasData || snapshot.data != null) {
                     return ListView.separated(
                         itemBuilder: (context, index) {
-                          DocumentSnapshot dsDataFriends = snapshot.data!.docs[index];
+                          DocumentSnapshot dsDataFriends =
+                              snapshot.data!.docs[index];
                           String lvUsername = dsDataFriends['name'];
                           String lvIdNum = dsDataFriends['email'];
                           return ListTile(
-                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                            leading: const Icon(
-                              Icons.person_outlined,
-                              size: 34,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            leading: ProfilePicture(
+                              name: lvUsername,
+                              radius: 24,
+                              fontsize: 18,
                             ),
                             trailing: GestureDetector(
                               child: const Icon(
@@ -134,7 +140,8 @@ class _ContactPageState extends State<ContactPage> {
                             ),
                           );
                         },
-                        separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 8.0),
                         itemCount: snapshot.data!.docs.length);
                   }
                   return const Center(
