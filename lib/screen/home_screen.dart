@@ -69,7 +69,7 @@ class _BottomNavigationBar extends StatefulWidget {
 }
 
 class _BottomNavigationBarState extends State<_BottomNavigationBar> {
-  var selectedindex = 1;
+  var selectedindex = 0;
   void handleItemSelected(int index) {
     setState(() {
       selectedindex = index;

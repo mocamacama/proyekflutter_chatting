@@ -109,6 +109,18 @@ class _COBAAState extends State<COBAA> {
           .collection('teman')
           .doc(username2)
           .update({'lastmsg': "[Picture]"});
+
+      var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
+      final allData = satunya.docs.map((doc) => doc.data()).toList();
+      var datachat = allData.last as Map<String, dynamic>;
+      print("datachat:");
+      print(datachat['uid']);
+      var upsatunya = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(datachat['uid'])
+          .collection('teman')
+          .doc(username1)
+          .set({'lastmsg': "[Picture]"}, SetOptions(merge: true));
     }
   }
 
@@ -150,6 +162,19 @@ class _COBAAState extends State<COBAA> {
             .collection('teman')
             .doc(username2)
             .update({'lastmsg': "[Picture]"});
+        var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
+        final allData = satunya.docs.map((doc) => doc.data()).toList();
+        var datachat = allData.last as Map<String, dynamic>;
+        print("datachat:");
+        print(datachat['uid']);
+        var upsatunya = await FirebaseFirestore.instance
+            .collection('User')
+            .doc(datachat['uid'])
+            .collection('teman')
+            .doc(username1)
+            .set({
+          'lastmsg': ["Picture"]
+        }, SetOptions(merge: true));
       } else {
         print('No Image Path Received');
       }
@@ -173,6 +198,17 @@ class _COBAAState extends State<COBAA> {
         .collection('teman')
         .doc(username2)
         .update({'lastmsg': teks});
+    var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
+    final allData = satunya.docs.map((doc) => doc.data()).toList();
+    var datachat = allData.last as Map<String, dynamic>;
+    print("datachat:");
+    print(datachat['uid']);
+    var upsatunya = await FirebaseFirestore.instance
+        .collection('User')
+        .doc(datachat['uid'])
+        .collection('teman')
+        .doc(username1)
+        .set({'lastmsg': teks}, SetOptions(merge: true));
   }
 
   @override
