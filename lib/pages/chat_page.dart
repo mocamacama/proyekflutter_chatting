@@ -51,8 +51,10 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildBody(BuildContext context) {
-    CollectionReference tabelTeman =
-        FirebaseFirestore.instance.collection("tabelUser").doc(glb.usernameses).collection("teman");
+    CollectionReference tabelTeman = FirebaseFirestore.instance
+        .collection("tabelUser")
+        .doc(glb.usernameses)
+        .collection("teman");
 
     tabelTeman.get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((f) => print('${f.data}}'));
@@ -101,7 +103,9 @@ class _ChatPageState extends State<ChatPage> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -113,7 +117,8 @@ class _ChatPageState extends State<ChatPage> {
                         height: 100,
                       )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
-            Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
+            Text(record.tanggal.substring(0, 16) + "",
+                style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
           ],
         ),
@@ -131,7 +136,9 @@ class _ChatPageState extends State<ChatPage> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -143,7 +150,8 @@ class _ChatPageState extends State<ChatPage> {
                         height: 100,
                       )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
-            Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
+            Text(record.tanggal.substring(0, 16) + "",
+                style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
           ],
         ),
