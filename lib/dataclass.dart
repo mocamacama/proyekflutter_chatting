@@ -30,7 +30,8 @@ class itemChats {
   }
 
   factory itemChats.fromJson(Map<String, dynamic> json) {
-    return itemChats(username: json['username'], text: json['text'], waktu: json['waktu']);
+    return itemChats(
+        username: json['username'], text: json['text'], waktu: json['waktu']);
   }
 }
 
@@ -39,12 +40,9 @@ class itemChats {
 class dataUser {
   final String idNum;
   final String username;
-  final String lastmsg = "Belum pernah chat, Ayo Chat!";
+  final String lastmsg = "Baru berteman, Ayo Chat!";
 
-  dataUser({
-    required this.idNum,
-    required this.username,
-  });
+  dataUser({required this.idNum, required this.username});
 
   Map<String, dynamic> toJson() {
     return {'email': idNum, 'name': username, 'lastmsg': lastmsg};
@@ -52,6 +50,23 @@ class dataUser {
 
   factory dataUser.fromJson(Map<String, dynamic> json) {
     return dataUser(idNum: json['email'], username: json['name']);
+  }
+}
+
+class dataTeman {
+  final String uid;
+  final String email;
+  final String name;
+
+  dataTeman({required this.uid, required this.email, required this.name});
+
+  Map<String, dynamic> toJson() {
+    return {'uid': uid, 'email': email, 'name': name};
+  }
+
+  factory dataTeman.fromJson(Map<String, dynamic> json) {
+    return dataTeman(
+        uid: json['uid'], email: json['email'], name: json['name']);
   }
 }
 
