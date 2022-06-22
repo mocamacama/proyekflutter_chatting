@@ -59,8 +59,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _BottomNavigationBar extends StatefulWidget {
-  const _BottomNavigationBar({Key? key, required this.onItemSelected})
-      : super(key: key);
+  const _BottomNavigationBar({Key? key, required this.onItemSelected}) : super(key: key);
 
   final ValueChanged<int> onItemSelected;
 
@@ -85,12 +84,12 @@ class _BottomNavigationBarState extends State<_BottomNavigationBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _NavigationBarItem(
-              index: 0,
-              label: 'Chat',
-              icon: CupertinoIcons.bubble_left_bubble_right_fill,
-              isSelected: (selectedindex == 0),
-              onTap: handleItemSelected),
+          // _NavigationBarItem(
+          //     index: 0,
+          //     label: 'Chat',
+          //     icon: CupertinoIcons.bubble_left_bubble_right_fill,
+          //     isSelected: (selectedindex == 0),
+          //     onTap: handleItemSelected),
           _NavigationBarItem(
               index: 1,
               label: 'Contact',
