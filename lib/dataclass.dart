@@ -39,7 +39,7 @@ class itemChats {
 class dataUser {
   final String idNum;
   final String username;
-  final String lastmsg = "";
+  final String lastmsg = "Belum pernah chat, Ayo Chat!";
 
   dataUser({
     required this.idNum,

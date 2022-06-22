@@ -85,7 +85,6 @@ class _ContactPageState extends State<ContactPage> {
                           DocumentSnapshot dsDataFriends = snapshot.data!.docs[index];
                           String lvUsername = dsDataFriends['name'];
                           String lvIdNum = dsDataFriends['email'];
-                          String lvLastmsg = dsDataFriends['lastmsg'];
                           return ListTile(
                             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                             leading: const Icon(
@@ -130,7 +129,7 @@ class _ContactPageState extends State<ContactPage> {
                                   color: Color.fromARGB(255, 2, 65, 110)),
                             ),
                             subtitle: Text(
-                              lvLastmsg,
+                              lvIdNum,
                               style: const TextStyle(fontSize: 14),
                             ),
                           );
