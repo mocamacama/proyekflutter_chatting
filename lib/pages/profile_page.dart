@@ -34,7 +34,6 @@ Future<String> getUserName() async {
 class _ProfilePageState extends State<ProfilePage> {
   final Database test = Database();
   late Future<String> _value;
-
   @override
   initState() {
     super.initState();
@@ -45,23 +44,46 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: FutureBuilder<String>(
-            future: _value,
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-              return Column(
+        child: FutureBuilder<String>(
+          future: _value,
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
                 children: [
-                  SizedBox(height: 150),
-                  ProfilePicture(
-                      name: snapshot.data.toString(), radius: 50, fontsize: 21),
-                  SizedBox(height: 50),
-                  //welcome
-                  Text(snapshot.data.toString(),
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                          color: Colors.black)),
-                  SizedBox(height: 50),
+                  Row(
+                    children: [
+                      ProfilePicture(
+                          name: snapshot.data.toString(),
+                          radius: 40,
+                          fontsize: 30),
+                      //welcome
+                      SizedBox(width: 30),
+                      Column(
+                        children: [
+                          SizedBox(width: 30),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(snapshot.data.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                    color: Colors.black)),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(_auth.getCurrentEmail().toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                    color: Colors.black)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  SizedBox(height: 100),
                   TextButton(
                     onPressed: () async {
                       var currentUser = FirebaseAuth.instance.currentUser;
@@ -77,9 +99,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ],
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

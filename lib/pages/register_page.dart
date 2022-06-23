@@ -65,7 +65,7 @@ class _Register_PageState extends State<Register_Page> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 //username
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -91,7 +91,7 @@ class _Register_PageState extends State<Register_Page> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 //Password
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -118,7 +118,7 @@ class _Register_PageState extends State<Register_Page> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 //register
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -157,7 +157,8 @@ class _Register_PageState extends State<Register_Page> {
   }
 
   void createUser() async {
-    dynamic result = await _auth.createNewUser(_emailContoller.text, _nameContoller.text, _passwordController.text);
+    dynamic result = await _auth.createNewUser(
+        _emailContoller.text, _nameContoller.text, _passwordController.text);
     // print("ini email" + result.email);
     if (result == null) {
       print('Email is not valid');

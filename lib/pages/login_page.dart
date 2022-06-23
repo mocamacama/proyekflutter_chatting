@@ -36,10 +36,59 @@ class _Login_PageState extends State<Login_Page> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               //Username
-              inputText("Username"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.always,
+                    controller: _emailContoller,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Email cannot be empty';
+                      } else
+                        return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(height: 20),
               //Password
-              inputText("Password"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: TextFormField(
+                    autovalidateMode: AutovalidateMode.always,
+                    obscureText: true,
+                    controller: _passwordController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Password cannot be empty';
+                      } else
+                        return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -74,70 +123,30 @@ class _Login_PageState extends State<Login_Page> {
     );
   }
 
-  Padding inputText(String hint) {
-    if (hint == "Username") {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.grey[200],
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(12)),
-          child: TextFormField(
-            controller: _emailContoller,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Email cannot be empty';
-              } else
-                return null;
-            },
-            decoration: InputDecoration(
-              labelText: 'Email',
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.grey[200],
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(12)),
-          child: TextFormField(
-            obscureText: true,
-            controller: _passwordController,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Password cannot be empty';
-              } else
-                return null;
-            },
-            decoration: InputDecoration(
-              labelText: 'Password',
-              labelStyle: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
   void signInUser() async {
-    dynamic authResult = await _auth.loginUser(_emailContoller.text, _passwordController.text);
+    dynamic authResult =
+        await _auth.loginUser(_emailContoller.text, _passwordController.text);
     if (authResult == null) {
-      print('Sign in error. could not be able to login');
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text("Pemberitahuan"),
+                content: Text('Gagal Sign In, Password atau Email salah'),
+                actions: <Widget>[
+                  MaterialButton(
+                      elevation: 5.00,
+                      child: const Text("Ok"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
+                ],
+              ));
     } else {
       glb.usernameses = _emailContoller.text;
       _emailContoller.clear();
       _passwordController.clear();
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
   }
 }
