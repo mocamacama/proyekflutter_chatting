@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/scheduler.dart';
@@ -16,11 +17,11 @@ import 'package:permission_handler/permission_handler.dart';
 class COBAA extends StatefulWidget {
   final String username1;
   final String username2;
-  const COBAA({Key? key, required this.username1, required this.username2})
-      : super(key: key);
+  final int baru;
+  const COBAA({Key? key, required this.username1, required this.username2, required this.baru}) : super(key: key);
 
   @override
-  State<COBAA> createState() => _COBAAState(this.username1, this.username2);
+  State<COBAA> createState() => _COBAAState(this.username1, this.username2, this.baru);
 }
 
 class _COBAAState extends State<COBAA> {
@@ -29,12 +30,12 @@ class _COBAAState extends State<COBAA> {
   String username1, username2;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String channel = "";
-
+  int baru;
   late FirebaseStorage _firebaseStorage;
   ImagePicker imgpicker = ImagePicker();
   XFile? _image;
 
-  _COBAAState(this.username1, this.username2) {}
+  _COBAAState(this.username1, this.username2, this.baru) {}
 
   @override
   void initState() {
@@ -44,6 +45,8 @@ class _COBAAState extends State<COBAA> {
     } else {
       channel = this.username2 + this.username1;
     }
+    channel = channel + baru.toString();
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (_lvcontroller.hasClients) {}
       Timer(Duration(seconds: 1), () {
@@ -90,8 +93,7 @@ class _COBAAState extends State<COBAA> {
       var filename = basename(file.path);
       // var snapshot =
       //     await _firebaseStorage.ref().child('images/$filename').putFile(file);
-      Reference firebaseStorageRef =
-          _firebaseStorage.ref().child('images/$filename');
+      Reference firebaseStorageRef = _firebaseStorage.ref().child('images/$filename');
       UploadTask uploadTask = firebaseStorageRef.putFile(file);
       var taskSnap = await (await uploadTask).ref.getDownloadURL();
       print(taskSnap);
@@ -112,10 +114,7 @@ class _COBAAState extends State<COBAA> {
           .doc(username2)
           .update({'lastmsg': "[Picture]"});
 
-      var satunya = await _firestore
-          .collection('User')
-          .where('email', isEqualTo: username2)
-          .get();
+      var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
       final allData = satunya.docs.map((doc) => doc.data()).toList();
       var datachat = allData.last as Map<String, dynamic>;
       print("datachat:");
@@ -146,8 +145,7 @@ class _COBAAState extends State<COBAA> {
         //     .ref()
         //     .child('images/$filename')
         //     .putFile(file); Reference firebaseStorageRef =
-        Reference firebaseStorageRef =
-            _firebaseStorage.ref().child('images/$filename');
+        Reference firebaseStorageRef = _firebaseStorage.ref().child('images/$filename');
         UploadTask uploadTask = firebaseStorageRef.putFile(file);
         var taskSnap = await (await uploadTask).ref.getDownloadURL();
         print(taskSnap);
@@ -168,10 +166,7 @@ class _COBAAState extends State<COBAA> {
             .collection('teman')
             .doc(username2)
             .update({'lastmsg': "[Picture]"});
-        var satunya = await _firestore
-            .collection('User')
-            .where('email', isEqualTo: username2)
-            .get();
+        var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
         final allData = satunya.docs.map((doc) => doc.data()).toList();
         var datachat = allData.last as Map<String, dynamic>;
         print("datachat:");
@@ -195,37 +190,55 @@ class _COBAAState extends State<COBAA> {
   void sendmessage() async {
     var teks = txtChat.text;
     txtChat.text = "";
-
-    DocumentReference ref = await _firestore.collection(channel).add({
-      'user1': username1,
-      'user2': username2,
-      'teks': teks,
-      'tanggal': DateTime.now().toString(),
-      'gambar': ""
-    });
+    FirebaseFirestore refbaru = FirebaseFirestore.instance;
+    DocumentReference ref = await _firestore.collection(channel).add(
+        {'user1': username1, 'user2': username2, 'teks': teks, 'tanggal': DateTime.now().toString(), 'gambar': ""});
     _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
     var currentUser = FirebaseAuth.instance.currentUser;
     print(currentUser?.uid);
-    var lasmsgref = await FirebaseFirestore.instance
-        .collection('User')
-        .doc(currentUser?.uid)
-        .collection('teman')
-        .doc(username2)
-        .update({'lastmsg': teks});
-    var satunya = await _firestore
-        .collection('User')
-        .where('email', isEqualTo: username2)
-        .get();
-    final allData = satunya.docs.map((doc) => doc.data()).toList();
-    var datachat = allData.last as Map<String, dynamic>;
-    print("datachat:");
-    print(datachat['uid']);
-    var upsatunya = await FirebaseFirestore.instance
-        .collection('User')
-        .doc(datachat['uid'])
-        .collection('teman')
-        .doc(username1)
-        .set({'lastmsg': teks}, SetOptions(merge: true));
+    if (baru >= 0) {
+      var lasmsgref = await FirebaseFirestore.instance
+          .collection('Chat')
+          .where('username1', isEqualTo: username1)
+          .where('username2', isEqualTo: username2)
+          .where('baru', isEqualTo: baru)
+          .get()
+          .then((snapshot) => {
+                print("snssnid = " + snapshot.docs[0].id),
+                refbaru.collection('Chat').doc(snapshot.docs[0].id).set({'lastmsg': teks}, SetOptions(merge: true))
+              });
+
+      // .update({'lastmsg': teks});
+      var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
+      final allData = satunya.docs.map((doc) => doc.data()).toList();
+      var datachat = allData.last as Map<String, dynamic>;
+      print("datachat:");
+      print(datachat['uid']);
+      var upsatunya = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(datachat['uid'])
+          .collection('teman')
+          .doc(username1)
+          .set({'lastmsg': teks}, SetOptions(merge: true));
+    } else {
+      var lasmsgref = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(currentUser?.uid)
+          .collection('teman')
+          .doc(username2)
+          .set({'lastmsgbaru': teks}, SetOptions(merge: true));
+      var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
+      final allData = satunya.docs.map((doc) => doc.data()).toList();
+      var datachat = allData.last as Map<String, dynamic>;
+      print("datachat:");
+      print(datachat['uid']);
+      var upsatunya = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(datachat['uid'])
+          .collection('teman')
+          .doc(username1)
+          .set({'lastmsgbaru': teks}, SetOptions(merge: true));
+    }
   }
 
   @override
@@ -314,17 +327,11 @@ class _COBAAState extends State<COBAA> {
   }
 
   Widget _buildBody(BuildContext context) {
-    FirebaseFirestore.instance
-        .collection(channel)
-        .get()
-        .then((QuerySnapshot snapshot) {
+    FirebaseFirestore.instance.collection(channel).get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((f) => print('${f.data}}'));
     });
 
-    var data = FirebaseFirestore.instance
-        .collection(channel)
-        .orderBy('tanggal')
-        .snapshots();
+    var data = FirebaseFirestore.instance.collection(channel).orderBy('tanggal').snapshots();
     return StreamBuilder<QuerySnapshot>(
       stream: data,
       builder: (context, snapshot) {
@@ -354,7 +361,7 @@ class _COBAAState extends State<COBAA> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
     print("cek = " + record.user1 + "-" + "Romario");
-    if (record.user1 == username1) {
+    if (record.user1 == username2) {
       // rata kanan
       return Padding(
         key: ValueKey(record.tanggal),
@@ -368,9 +375,7 @@ class _COBAAState extends State<COBAA> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -382,8 +387,7 @@ class _COBAAState extends State<COBAA> {
                         height: 100,
                       )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
-            Text(record.tanggal.substring(0, 16) + "",
-                style: TextStyle(fontSize: 10.0, color: Colors.black)),
+            Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
           ],
         ),
@@ -401,9 +405,7 @@ class _COBAAState extends State<COBAA> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -415,8 +417,7 @@ class _COBAAState extends State<COBAA> {
                         height: 100,
                       )),
             Padding(padding: const EdgeInsets.only(top: 5.0)),
-            Text(record.tanggal.substring(0, 16) + "",
-                style: TextStyle(fontSize: 10.0, color: Colors.black)),
+            Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
             Padding(padding: const EdgeInsets.only(top: 10.0)),
           ],
         ),
@@ -446,8 +447,7 @@ class Record {
         gambar = map['gambar'];
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data() as Map<String, dynamic>,
-            reference: snapshot.reference);
+      : this.fromMap(snapshot.data() as Map<String, dynamic>, reference: snapshot.reference);
 
   @override
   String toString() => "Record<$user1:$user2:$teks:$tanggal:$gambar>";

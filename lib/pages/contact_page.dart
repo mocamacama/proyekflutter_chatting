@@ -20,6 +20,8 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   final _searchFriend = TextEditingController();
   String channel = "";
+
+  int vsize = 0;
   @override
   void dispose() {
     _searchFriend.dispose();
@@ -67,8 +69,7 @@ class _ContactPageState extends State<ContactPage> {
                 hintText: "Case Sensitive",
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.blue)),
+                    borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.blue)),
               ),
             ),
             const SizedBox(
@@ -84,14 +85,11 @@ class _ContactPageState extends State<ContactPage> {
                   } else if (snapshot.hasData || snapshot.data != null) {
                     return ListView.separated(
                         itemBuilder: (context, index) {
-                          DocumentSnapshot dsDataFriends =
-                              snapshot.data!.docs[index];
+                          DocumentSnapshot dsDataFriends = snapshot.data!.docs[index];
                           String lvUsername = dsDataFriends['name'];
                           String lvIdNum = dsDataFriends['email'];
                           return ListTile(
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                             leading: ProfilePicture(
                               name: lvUsername,
                               radius: 24,
@@ -106,13 +104,43 @@ class _ContactPageState extends State<ContactPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => COBAA(
-                                            username1: glb.usernameses,
-                                            username2: lvIdNum,
-                                          )),
+                                      builder: (context) =>
+                                          COBAA(username1: glb.usernameses, username2: lvIdNum, baru: 0)),
                                 );
                               },
                             ),
+                            onTap: () {
+                              FirebaseFirestore refbaru = FirebaseFirestore.instance;
+                              FirebaseFirestore upsatunya = FirebaseFirestore.instance;
+                              var addchat = refbaru.collection('Chat');
+                              var cekchat = refbaru
+                                  .collection('Chat')
+                                  .where('username1', isEqualTo: glb.usernameses)
+                                  .where('username2', isEqualTo: lvIdNum)
+                                  .get()
+                                  .then((snaphot) => {vsize = snaphot.size, print(snaphot.size)})
+                                  .whenComplete(() => addchat.add({
+                                            'username1': glb.usernameses,
+                                            'username2': lvIdNum,
+                                            'baru': vsize,
+                                            'lastmsg': "Ayo Chat di Room Baru",
+                                            // 'uid': idnya,
+                                          }).then((value) => upsatunya
+                                              .collection('Chat')
+                                              .doc(value.id)
+                                              .set({'uid': value.id}, SetOptions(merge: true)))
+
+                                      // print("vz" + vsize.toString())
+                                      )
+                                  .whenComplete(() => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                COBAA(username1: glb.usernameses, username2: lvIdNum, baru: vsize)),
+                                      ));
+                              // var idnya = addchat.doc().id;
+                              // print("idbaru" + idnya);
+                            },
                             tileColor: const Color.fromARGB(255, 142, 221, 250),
                             dense: false,
                             onLongPress: () {
@@ -140,8 +168,7 @@ class _ContactPageState extends State<ContactPage> {
                             ),
                           );
                         },
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 8.0),
+                        separatorBuilder: (context, index) => const SizedBox(height: 8.0),
                         itemCount: snapshot.data!.docs.length);
                   }
                   return const Center(

@@ -9,6 +9,7 @@ import 'package:proyek_chatting/dbserices.dart';
 import 'package:proyek_chatting/screen/home_screen.dart';
 import 'package:proyek_chatting/globals.dart' as glb;
 import 'package:proyek_chatting/dataclass.dart';
+import 'dart:async';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   // String username1 = "0899";
   // String username2 = "0812";
+  int baru = 0;
 
   final _searchFriend = TextEditingController();
   String channel = "";
@@ -35,11 +37,12 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
   }
 
-  Stream<QuerySnapshot<Object?>> onSearch() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> onSearch() {
     setState(() {});
-    var currentUser = FirebaseAuth.instance.currentUser;
-    print(currentUser?.uid);
-    return Database.getData(_searchFriend.text, currentUser?.uid);
+    var chats = FirebaseFirestore.instance.collection('Chat').get();
+    // print("chats");
+    // return chats.asStream();
+    return chats.asStream();
   }
 
   @override
@@ -92,48 +95,84 @@ class _ChatPageState extends State<ChatPage> {
                   } else if (snapshot.hasData || snapshot.data != null) {
                     return ListView.separated(
                         itemBuilder: (context, index) {
-                          DocumentSnapshot dsDataFriends =
-                              snapshot.data!.docs[index];
-                          String lvUsername = dsDataFriends['name'];
-                          String lvIdNum = dsDataFriends['email'];
-                          String lvLastmsg = dsDataFriends['lastmsg'];
-                          return ListTile(
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            leading: ProfilePicture(
-                              name: lvUsername,
-                              radius: 24,
-                              fontsize: 18,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => COBAA(
-                                          username1: glb.usernameses,
-                                          username2: lvIdNum,
-                                        )),
-                              );
-                            },
-                            tileColor: Color.fromARGB(255, 110, 216, 174),
-                            dense: false,
-                            title: Text(
-                              lvUsername,
-                              style: const TextStyle(
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Raleway',
-                                  color: Color.fromARGB(255, 2, 65, 110)),
-                            ),
-                            subtitle: Text(
-                              lvLastmsg,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          );
+                          DocumentSnapshot dsDataFriends = snapshot.data!.docs[index];
+                          String lvUsername1 = dsDataFriends['username1'];
+                          String lvUsername2 = dsDataFriends['username2'];
+                          int baru = dsDataFriends['baru'];
+                          String lvlastmsg = dsDataFriends['lastmsg'];
+                          if (glb.usernameses == lvUsername1) {
+                            return ListTile(
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                              leading: ProfilePicture(
+                                name: lvUsername2,
+                                radius: 24,
+                                fontsize: 18,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => COBAA(
+                                            username1: glb.usernameses,
+                                            username2: lvUsername2,
+                                            baru: baru,
+                                          )),
+                                );
+                              },
+                              tileColor: Color.fromARGB(255, 110, 216, 174),
+                              dense: false,
+                              title: Text(
+                                lvUsername2,
+                                style: const TextStyle(
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Raleway',
+                                    color: Color.fromARGB(255, 2, 65, 110)),
+                              ),
+                              subtitle: Text(
+                                lvlastmsg,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            );
+                          } else if (glb.usernameses == lvUsername2) {
+                            return ListTile(
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                              leading: ProfilePicture(
+                                name: lvUsername1,
+                                radius: 24,
+                                fontsize: 18,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => COBAA(
+                                            username1: glb.usernameses,
+                                            username2: lvUsername2,
+                                            baru: baru,
+                                          )),
+                                );
+                              },
+                              tileColor: Color.fromARGB(255, 110, 216, 174),
+                              dense: false,
+                              title: Text(
+                                lvUsername1,
+                                style: const TextStyle(
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Raleway',
+                                    color: Color.fromARGB(255, 2, 65, 110)),
+                              ),
+                              subtitle: Text(
+                                lvlastmsg,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
                         },
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 8.0),
+                        separatorBuilder: (context, index) => const SizedBox(height: 8.0),
                         itemCount: snapshot.data!.docs.length);
                   }
                   return const Center(
@@ -154,10 +193,8 @@ class _ChatPageState extends State<ChatPage> {
 }
 
 Widget _buildBody(BuildContext context) {
-  CollectionReference tabelTeman = FirebaseFirestore.instance
-      .collection("tabelUser")
-      .doc(glb.usernameses)
-      .collection("teman");
+  CollectionReference tabelTeman =
+      FirebaseFirestore.instance.collection("tabelUser").doc(glb.usernameses).collection("teman");
 
   tabelTeman.get().then((QuerySnapshot snapshot) {
     snapshot.docs.forEach((f) => print('${f.data}}'));
@@ -206,9 +243,7 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                 vertical: 8.0,
                 horizontal: 16.0,
               ),
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10.0)),
+              decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
               child: record.gambar == ""
                   ? Text(record.teks,
                       style: TextStyle(
@@ -220,8 +255,7 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                       height: 100,
                     )),
           Padding(padding: const EdgeInsets.only(top: 5.0)),
-          Text(record.tanggal.substring(0, 16) + "",
-              style: TextStyle(fontSize: 10.0, color: Colors.black)),
+          Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
           Padding(padding: const EdgeInsets.only(top: 10.0)),
         ],
       ),
@@ -239,9 +273,7 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                 vertical: 8.0,
                 horizontal: 16.0,
               ),
-              decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(10.0)),
+              decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
               child: record.gambar == ""
                   ? Text(record.teks,
                       style: TextStyle(
@@ -253,15 +285,13 @@ Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
                       height: 100,
                     )),
           Padding(padding: const EdgeInsets.only(top: 5.0)),
-          Text(record.tanggal.substring(0, 16) + "",
-              style: TextStyle(fontSize: 10.0, color: Colors.black)),
+          Text(record.tanggal.substring(0, 16) + "", style: TextStyle(fontSize: 10.0, color: Colors.black)),
           Padding(padding: const EdgeInsets.only(top: 10.0)),
         ],
       ),
     );
   }
 }
-
 
 /*@override
 Widget build(BuildContext context) {
