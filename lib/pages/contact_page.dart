@@ -95,20 +95,20 @@ class _ContactPageState extends State<ContactPage> {
                               radius: 24,
                               fontsize: 18,
                             ),
-                            trailing: GestureDetector(
-                              child: const Icon(
-                                Icons.chat,
-                                size: 34,
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          COBAA(username1: glb.usernameses, username2: lvIdNum, baru: 0)),
-                                );
-                              },
-                            ),
+                            // trailing: GestureDetector(
+                            //   child: const Icon(
+                            //     Icons.chat,
+                            //     size: 34,
+                            //   ),
+                            //   onTap: () {
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (context) =>
+                            //               COBAA(username1: glb.usernameses, username2: lvIdNum, baru: 0)),
+                            //     );
+                            //   },
+                            // ),
                             onTap: () {
                               FirebaseFirestore refbaru = FirebaseFirestore.instance;
                               FirebaseFirestore upsatunya = FirebaseFirestore.instance;

@@ -109,6 +109,8 @@ class _ChatPageState extends State<ChatPage> {
                                 fontsize: 18,
                               ),
                               onTap: () {
+                                print(lvUsername1);
+                                print(lvUsername2);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -143,12 +145,14 @@ class _ChatPageState extends State<ChatPage> {
                                 fontsize: 18,
                               ),
                               onTap: () {
+                                print(lvUsername1);
+                                print(lvUsername2);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => COBAA(
                                             username1: glb.usernameses,
-                                            username2: lvUsername2,
+                                            username2: lvUsername1,
                                             baru: baru,
                                           )),
                                 );

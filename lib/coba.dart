@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:proyek_chatting/globals.dart' as glb;
 
 class COBAA extends StatefulWidget {
   final String username1;
@@ -39,6 +40,8 @@ class _COBAAState extends State<COBAA> {
 
   @override
   void initState() {
+    print("us1 = " + username1);
+    print("us2 = " + username2);
     _firebaseStorage = FirebaseStorage.instance;
     if (this.username1.compareTo(this.username2) < 0) {
       channel = this.username1 + this.username2;
@@ -46,6 +49,7 @@ class _COBAAState extends State<COBAA> {
       channel = this.username2 + this.username1;
     }
     channel = channel + baru.toString();
+    print("channel - " + channel);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (_lvcontroller.hasClients) {}
@@ -106,25 +110,53 @@ class _COBAAState extends State<COBAA> {
       });
       _lvcontroller.jumpTo(_lvcontroller.position.maxScrollExtent);
       var currentUser = FirebaseAuth.instance.currentUser;
-      print(currentUser?.uid);
-      var lasmsgref = await FirebaseFirestore.instance
-          .collection('User')
-          .doc(currentUser?.uid)
-          .collection('teman')
-          .doc(username2)
-          .update({'lastmsg': "[Picture]"});
-
-      var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
-      final allData = satunya.docs.map((doc) => doc.data()).toList();
-      var datachat = allData.last as Map<String, dynamic>;
-      print("datachat:");
-      print(datachat['uid']);
-      var upsatunya = await FirebaseFirestore.instance
-          .collection('User')
-          .doc(datachat['uid'])
-          .collection('teman')
-          .doc(username1)
-          .set({'lastmsg': "[Picture]"}, SetOptions(merge: true));
+      FirebaseFirestore refbaru = FirebaseFirestore.instance;
+      if (baru >= 0) {
+        var lasmsgref2 = FirebaseFirestore.instance;
+        var lasmsgref = FirebaseFirestore.instance
+            .collection('Chat')
+            .where('baru', isEqualTo: baru)
+            .where('username1', isEqualTo: username1)
+            .where('username2', isEqualTo: username2)
+            .get()
+            .then((snapshot) => {
+                  print("masuk sini"),
+                  if (snapshot.size > 0)
+                    {
+                      print("masuk sini2"),
+                      print("snssnid = " + snapshot.docs[0].id),
+                      refbaru
+                          .collection('Chat')
+                          .doc(snapshot.docs[0].id)
+                          .set({'lastmsg': "[Picture]"}, SetOptions(merge: true))
+                    }
+                  else
+                    {
+                      print("masuk sini3"),
+                      lasmsgref2
+                          .collection('Chat')
+                          .where('baru', isEqualTo: baru)
+                          .where('username2', isEqualTo: username1)
+                          .where('username1', isEqualTo: username2)
+                          .get()
+                          .then((snap) => {
+                                if (snap.size == 0)
+                                  {
+                                    print("tidak mungkin"),
+                                  }
+                                else
+                                  {
+                                    print("snssnid = " + snap.docs[0].id),
+                                    refbaru
+                                        .collection('Chat')
+                                        .doc(snap.docs[0].id)
+                                        .set({'lastmsg': "[Picture]"}, SetOptions(merge: true)),
+                                    setState(() {})
+                                  }
+                              })
+                    }
+                });
+      }
     }
   }
 
@@ -160,25 +192,53 @@ class _COBAAState extends State<COBAA> {
 
         var currentUser = FirebaseAuth.instance.currentUser;
         print(currentUser?.uid);
-        var lasmsgref = await FirebaseFirestore.instance
-            .collection('User')
-            .doc(currentUser?.uid)
-            .collection('teman')
-            .doc(username2)
-            .update({'lastmsg': "[Picture]"});
-        var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
-        final allData = satunya.docs.map((doc) => doc.data()).toList();
-        var datachat = allData.last as Map<String, dynamic>;
-        print("datachat:");
-        print(datachat['uid']);
-        var upsatunya = await FirebaseFirestore.instance
-            .collection('User')
-            .doc(datachat['uid'])
-            .collection('teman')
-            .doc(username1)
-            .set({
-          'lastmsg': ["Picture"]
-        }, SetOptions(merge: true));
+        FirebaseFirestore refbaru = FirebaseFirestore.instance;
+        if (baru >= 0) {
+          var lasmsgref2 = FirebaseFirestore.instance;
+          var lasmsgref = FirebaseFirestore.instance
+              .collection('Chat')
+              .where('baru', isEqualTo: baru)
+              .where('username1', isEqualTo: username1)
+              .where('username2', isEqualTo: username2)
+              .get()
+              .then((snapshot) => {
+                    print("masuk sini"),
+                    if (snapshot.size > 0)
+                      {
+                        print("masuk sini2"),
+                        print("snssnid = " + snapshot.docs[0].id),
+                        refbaru
+                            .collection('Chat')
+                            .doc(snapshot.docs[0].id)
+                            .set({'lastmsg': "[Picture]"}, SetOptions(merge: true))
+                      }
+                    else
+                      {
+                        print("masuk sini3"),
+                        lasmsgref2
+                            .collection('Chat')
+                            .where('baru', isEqualTo: baru)
+                            .where('username2', isEqualTo: username1)
+                            .where('username1', isEqualTo: username2)
+                            .get()
+                            .then((snap) => {
+                                  if (snap.size == 0)
+                                    {
+                                      print("tidak mungkin"),
+                                    }
+                                  else
+                                    {
+                                      print("snssnid = " + snap.docs[0].id),
+                                      refbaru
+                                          .collection('Chat')
+                                          .doc(snap.docs[0].id)
+                                          .set({'lastmsg': "[Picture]"}, SetOptions(merge: true)),
+                                      setState(() {})
+                                    }
+                                })
+                      }
+                  });
+        }
       } else {
         print('No Image Path Received');
       }
@@ -188,6 +248,8 @@ class _COBAAState extends State<COBAA> {
   }
 
   void sendmessage() async {
+    print("usc1= " + username1);
+    print("usc2= " + username2);
     var teks = txtChat.text;
     txtChat.text = "";
     FirebaseFirestore refbaru = FirebaseFirestore.instance;
@@ -197,48 +259,79 @@ class _COBAAState extends State<COBAA> {
     var currentUser = FirebaseAuth.instance.currentUser;
     print(currentUser?.uid);
     if (baru >= 0) {
-      var lasmsgref = await FirebaseFirestore.instance
+      var lasmsgref2 = FirebaseFirestore.instance;
+      var lasmsgref = FirebaseFirestore.instance
           .collection('Chat')
+          .where('baru', isEqualTo: baru)
           .where('username1', isEqualTo: username1)
           .where('username2', isEqualTo: username2)
-          .where('baru', isEqualTo: baru)
           .get()
           .then((snapshot) => {
-                print("snssnid = " + snapshot.docs[0].id),
-                refbaru.collection('Chat').doc(snapshot.docs[0].id).set({'lastmsg': teks}, SetOptions(merge: true))
+                print("masuk sini"),
+                if (snapshot.size > 0)
+                  {
+                    print("masuk sini2"),
+                    print("snssnid = " + snapshot.docs[0].id),
+                    refbaru.collection('Chat').doc(snapshot.docs[0].id).set({'lastmsg': teks}, SetOptions(merge: true))
+                  }
+                else
+                  {
+                    print("masuk sini3"),
+                    lasmsgref2
+                        .collection('Chat')
+                        .where('baru', isEqualTo: baru)
+                        .where('username2', isEqualTo: username1)
+                        .where('username1', isEqualTo: username2)
+                        .get()
+                        .then((snap) => {
+                              if (snap.size == 0)
+                                {
+                                  print("tidak mungkin"),
+                                }
+                              else
+                                {
+                                  print("snssnid = " + snap.docs[0].id),
+                                  refbaru
+                                      .collection('Chat')
+                                      .doc(snap.docs[0].id)
+                                      .set({'lastmsg': teks}, SetOptions(merge: true)),
+                                  setState(() {})
+                                }
+                            })
+                  }
               });
-
-      // .update({'lastmsg': teks});
-      var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
-      final allData = satunya.docs.map((doc) => doc.data()).toList();
-      var datachat = allData.last as Map<String, dynamic>;
-      print("datachat:");
-      print(datachat['uid']);
-      var upsatunya = await FirebaseFirestore.instance
-          .collection('User')
-          .doc(datachat['uid'])
-          .collection('teman')
-          .doc(username1)
-          .set({'lastmsg': teks}, SetOptions(merge: true));
-    } else {
-      var lasmsgref = await FirebaseFirestore.instance
-          .collection('User')
-          .doc(currentUser?.uid)
-          .collection('teman')
-          .doc(username2)
-          .set({'lastmsgbaru': teks}, SetOptions(merge: true));
-      var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
-      final allData = satunya.docs.map((doc) => doc.data()).toList();
-      var datachat = allData.last as Map<String, dynamic>;
-      print("datachat:");
-      print(datachat['uid']);
-      var upsatunya = await FirebaseFirestore.instance
-          .collection('User')
-          .doc(datachat['uid'])
-          .collection('teman')
-          .doc(username1)
-          .set({'lastmsgbaru': teks}, SetOptions(merge: true));
     }
+    //   // .update({'lastmsg': teks});
+    //   //   var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
+    //   //   final allData = satunya.docs.map((doc) => doc.data()).toList();
+    //   //   var datachat = allData.last as Map<String, dynamic>;
+    //   //   print("datachat:");
+    //   //   print(datachat['uid']);
+    //   //   var upsatunya = await FirebaseFirestore.instance
+    //   //       .collection('User')
+    //   //       .doc(datachat['uid'])
+    //   //       .collection('teman')
+    //   //       .doc(username1)
+    //   //       .set({'lastmsg': teks}, SetOptions(merge: true));
+    //   // } else {
+    //   //   var lasmsgref = await FirebaseFirestore.instance
+    //   //       .collection('User')
+    //   //       .doc(currentUser?.uid)
+    //   //       .collection('teman')
+    //   //       .doc(username2)
+    //   //       .set({'lastmsgbaru': teks}, SetOptions(merge: true));
+    //   //   var satunya = await _firestore.collection('User').where('email', isEqualTo: username2).get();
+    //   //   final allData = satunya.docs.map((doc) => doc.data()).toList();
+    //   //   var datachat = allData.last as Map<String, dynamic>;
+    //   //   print("datachat:");
+    //   //   print(datachat['uid']);
+    //   //   var upsatunya = await FirebaseFirestore.instance
+    //   //       .collection('User')
+    //   //       .doc(datachat['uid'])
+    //   //       .collection('teman')
+    //   //       .doc(username1)
+    //   //       .set({'lastmsgbaru': teks}, SetOptions(merge: true));
+    // }
   }
 
   @override
@@ -360,8 +453,9 @@ class _COBAAState extends State<COBAA> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
-    print("cek = " + record.user1 + "-" + "Romario");
-    if (record.user1 == username2) {
+    print("cek = 1:" + record.user1 + ",glb :" + glb.usernameses);
+    if (record.user1 == glb.usernameses) {
+      print("beda =  " + record.user2 + ",glb :" + glb.usernameses);
       // rata kanan
       return Padding(
         key: ValueKey(record.tanggal),
@@ -375,7 +469,7 @@ class _COBAAState extends State<COBAA> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
@@ -393,6 +487,7 @@ class _COBAAState extends State<COBAA> {
         ),
       );
     } else {
+      print("sama =  " + record.user1 + ",glb :" + glb.usernameses);
       return Padding(
         key: ValueKey(record.tanggal),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -405,7 +500,7 @@ class _COBAAState extends State<COBAA> {
                   vertical: 8.0,
                   horizontal: 16.0,
                 ),
-                decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(10.0)),
+                decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10.0)),
                 child: record.gambar == ""
                     ? Text(record.teks,
                         style: TextStyle(
